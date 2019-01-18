@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Scale } from '../scale';
 import { Recipe } from '../recipe';
 
+import { ConversionService } from '../conversion.service';
+
 @Component({
   selector: 'app-scale',
   templateUrl: './scale.component.html',
@@ -12,6 +14,8 @@ export class ScaleComponent implements OnInit {
    id: 2,
    name: 'juicy pears'
  };
+
+ conversions: object;
 
  mockRecipes: Recipe[] = [
   {
@@ -26,14 +30,20 @@ export class ScaleComponent implements OnInit {
   }
  ];
 
- selectedRecipe: Recipe = this.mockRecipes[0];
+ selectedRecipe: Recipe;
  onSelect(recipe: Recipe): void {
    this.selectedRecipe = recipe;
  }
 
-  constructor() { }
+ getConversions(): void {
+  this.conversions = this.conversionService.getConversions();
+  console.log(this.conversions);
+}
+
+  constructor(private conversionService: ConversionService) { }
 
   ngOnInit() {
+    this.getConversions();
   }
 
 }

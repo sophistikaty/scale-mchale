@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { ScaleComponent } from './scale/scale.component';
 
 import { FormsModule } from '@angular/forms';
+import { RecipeComponent } from './recipe/recipe.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ScaleComponent
+    ScaleComponent,
+    RecipeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,31 @@
 <div>
+    <!-- user input -->
     <label>name:
       <input [(ngModel)]="scale.name" placeholder="name">
     </label>
     {{scale.name}}
     {{scale.id}}
-  </div>
+
+
+    <!-- Displaying a list -->
+    <h2>My Recipes</h2>
+    <ul class="recipes">
+    <li *ngFor="let recipe of mockRecipes"
+            [class.selected]="hero === selectedHero"
+            (click)="onSelect(recipe)">
+        <span class="delicious">{{recipe.id}}</span> {{recipe.name}}
+    </li>
+    </ul>
+
+    <!-- click binding -->
+    <div *ngIf="selectedRecipe">
+        <h2>{{selectedRecipe.name | uppercase}} Details</h2>
+        <div><span>id: </span>{{selectedRecipe.id}}</div>
+        <div>
+        <label>name:
+            <input [(ngModel)]="selectedRecipe.name" placeholder="name">
+        </label>
+        </div>
+    </div>
+
+</div>

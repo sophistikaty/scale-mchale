@@ -3,6 +3,8 @@ import { Scale } from '../scale';
 import { Recipe } from '../recipe';
 
 import { ConversionService } from '../conversion.service';
+import { RecipeService } from '../recipe.service';
+import { NutritionService } from '../nutrition.service';
 
 @Component({
   selector: 'app-scale',
@@ -16,19 +18,7 @@ export class ScaleComponent implements OnInit {
  };
 
  conversions: object;
-
- mockRecipes: Recipe[] = [
-  {
-    id: 3,
-    name: '3 tacos',
-    ingredients: ['tortilla', 'steak', '3 cheese']
-  },
-  {
-    id: 4,
-    name: 'pizza',
-    ingredients: ['dough', 'tomato sauce', 'cheese']
-  }
- ];
+ mockRecipes: Recipe[];
 
  selectedRecipe: Recipe;
  onSelect(recipe: Recipe): void {
@@ -40,10 +30,19 @@ export class ScaleComponent implements OnInit {
   console.log(this.conversions);
 }
 
-  constructor(private conversionService: ConversionService) { }
+getRecipes(): void {
+  this.recipeService.getRecipes()
+    .subscribe(recipes => this.mockRecipes = recipes);
+}
+
+  constructor(private conversionService: ConversionService, 
+              private recipeService: RecipeService,
+              public nutritionService: NutritionService) { }
 
   ngOnInit() {
     this.getConversions();
+    this.getRecipes();
+    console.log('nutrition info', this.nutritionService.nutriitonInfo);
   }
 
 }

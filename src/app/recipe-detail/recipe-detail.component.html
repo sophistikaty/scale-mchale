@@ -1,0 +1,20 @@
+<button (click)="goBack()">go back</button>
+<p>
+  recipe-detail works!
+</p>
+<div *ngIf="recipe">
+
+  <h2>{{recipe.name | uppercase}} Details</h2>
+  <div><span>id:</span>{{recipe.id}}</div>
+  <div>
+    <label>name:
+      <input [(ngModel)]="recipe.name" placeholder="name"/>
+    </label>
+  </div>
+  Ingredients:
+  <ul>
+    <li *ngFor="let ingredient of recipe.ingredients">
+        <span class="ingredient">{{ingredient}}</span>
+    </li>
+  </ul>
+</div>

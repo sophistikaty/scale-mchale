@@ -7,12 +7,14 @@ import { ScaleComponent } from './scale/scale.component';
 
 import { FormsModule } from '@angular/forms';
 import { RecipeComponent } from './recipe/recipe.component';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ScaleComponent,
-    RecipeComponent
+    RecipeComponent,
+    RecipeDetailComponent
   ],
   imports: [
     BrowserModule,

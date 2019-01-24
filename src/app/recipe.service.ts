@@ -9,7 +9,12 @@ import { NutritionService } from './nutrition.service';
 })
 export class RecipeService {
 
-  mockRecipes2: Recipe[] = [
+  mockRecipes: Recipe[] = [
+    {
+      id: 2,
+      name: 'gyro',
+      ingredients: ['beef', 'pita', 'cheese', 'lettuce']
+    },
     {
       id: 3,
       name: '333 tacos',
@@ -22,10 +27,13 @@ export class RecipeService {
     }
    ];
 
+   getRecipe(id: number): Observable<Recipe> {
+    return of(this.mockRecipes.find(recipe => recipe.id === id));
+  }
   getRecipes(): Observable<Recipe[]> {
     console.log('adding recipe');
     this.nutritionService.add('mock nutrition from recipe');
-    return of(this.mockRecipes2);
+    return of(this.mockRecipes);
   }
 
   constructor(private nutritionService: NutritionService) { }

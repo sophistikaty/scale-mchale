@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../recipe';
+import { RecipeService } from '../recipe.service';
 
 
 @Component({
@@ -8,14 +9,16 @@ import { Recipe } from '../recipe';
   styleUrls: ['./recipe.component.scss']
 })
 export class RecipeComponent implements OnInit {
-  recipe: Recipe = {
-    id: 2,
-    name: 'tacos',
-    ingredients: ['tortilla', 'steak', 'cheese']
-  };
-  constructor() { }
+  mockRecipes: Recipe[];
 
+  getRecipes(): void {
+    this.recipeService.getRecipes()
+      .subscribe(recipes => this.mockRecipes = recipes);
+  }
+
+  constructor(private recipeService: RecipeService) { }
   ngOnInit() {
+    this.getRecipes();
   }
 
 }

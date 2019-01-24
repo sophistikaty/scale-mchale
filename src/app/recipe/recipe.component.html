@@ -1,3 +1,12 @@
 <p>
   recipe works!
+
 </p>
+  <h2>My Recipes !in recipe component!</h2>
+    <ul class="recipes">
+    <li *ngFor="let recipe of mockRecipes">
+        <a routerLink="/detail/{{recipe.id}}">
+          <span class="delicious">{{recipe.id}}</span> {{recipe.name}} 
+        </a>
+    </li>
+    </ul>

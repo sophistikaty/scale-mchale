@@ -11,7 +11,7 @@ import { RecipeService } from '../recipe.service';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
-  recipe: object;
+  recipe: Recipe;
 
   getRecipe(): void {
     const id = +this.route.snapshot.paramMap.get('id');
@@ -23,11 +23,16 @@ export class RecipeDetailComponent implements OnInit {
     this.location.back();
   }
 
+  save(): void {
+    this.recipeService.updateRecipe(this.recipe)
+      .subscribe(() => this.goBack());
+  }
+
   constructor(private route: ActivatedRoute, private recipeService: RecipeService, private location: Location) { }
 
   ngOnInit() {
     this.getRecipe();
-    console.log('recipe',this.recipe);
+    console.log('recipe', this.recipe);
   }
 
 }

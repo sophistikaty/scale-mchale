@@ -1,40 +1,70 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { Recipe } from './recipe';
 import { NutritionService } from './nutrition.service';
 
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class RecipeService {
 
-  mockRecipes: Recipe[] = [
-    {
-      id: 2,
-      name: 'gyro',
-      ingredients: ['beef', 'pita', 'cheese', 'lettuce']
-    },
-    {
-      id: 3,
-      name: '333 tacos',
-      ingredients: ['tortilla', 'steak', '3 cheese']
-    },
-    {
-      id: 4,
-      name: 'delicious pizza',
-      ingredients: ['dough', 'tomato sauce', 'cheese']
-    }
-   ];
+  recipes: Recipe[];
+  private recipesUrl = 'api/recipes';  // URL to web api
+
+  /**
+ * Handle Http operation that failed.
+ * Let the app continue.
+ * @param operation - name of the operation that failed
+ * @param result - optional value to return as the observable result
+ */
+private handleError<T> (operation = 'operation', result?: T) {
+  return (error: any): Observable<T> => {
+
+    // TODO: send the error to remote logging infrastructure
+    console.error(error); // log to console instead
+
+    // TODO: better job of transforming error for user consumption
+    console.log(`${operation} failed: ${error.message}`);
+
+    // Let the app keep running by returning an empty result.
+    return of(result as T);
+  };
+}
 
    getRecipe(id: number): Observable<Recipe> {
-    return of(this.mockRecipes.find(recipe => recipe.id === id));
+    const url = `${this.recipesUrl}/${id}`;
+    return this.http.get<Recipe>(url).pipe(
+      tap(_ => console.log(`fetched recipe id=${id}`,_)),
+      catchError(this.handleError<Recipe>(`getRecipe id=${id}`))
+    );
   }
+
   getRecipes(): Observable<Recipe[]> {
     console.log('adding recipe');
     this.nutritionService.add('mock nutrition from recipe');
-    return of(this.mockRecipes);
+    return this.http.get<Recipe[]>(this.recipesUrl)
+      .pipe(
+        tap(_ => console.log('fetched recipes', _)),
+        catchError(this.handleError('getRecipes', []))
+      );
   }
 
-  constructor(private nutritionService: NutritionService) { }
+  updateRecipe (recipe: Recipe): Observable<any> {
+    return this.http.put(this.recipesUrl, recipe, httpOptions).pipe(
+      tap(_ => console.log(`updated recipe id=${recipe.id}`, _)),
+      catchError(this.handleError<any>('updateRecipe'))
+    );
+  }
+
+  constructor(private http: HttpClient,
+    private nutritionService: NutritionService) { }
 }

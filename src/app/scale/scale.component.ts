@@ -18,7 +18,7 @@ export class ScaleComponent implements OnInit {
  };
 
  conversions: object;
- mockRecipes: Recipe[];
+ recipes: Recipe[];
 
  selectedRecipe: Recipe;
  onSelect(recipe: Recipe): void {
@@ -32,7 +32,7 @@ export class ScaleComponent implements OnInit {
 
 getRecipes(): void {
   this.recipeService.getRecipes()
-    .subscribe(recipes => this.mockRecipes = recipes);
+    .subscribe(recipes => this.recipes = recipes);
 }
 
   constructor(private conversionService: ConversionService, 

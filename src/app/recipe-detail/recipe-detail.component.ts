@@ -28,7 +28,9 @@ export class RecipeDetailComponent implements OnInit {
       .subscribe(() => this.goBack());
   }
 
-  constructor(private route: ActivatedRoute, private recipeService: RecipeService, private location: Location) { }
+  constructor(private route: ActivatedRoute,
+    private recipeService: RecipeService,
+    private location: Location) { }
 
   ngOnInit() {
     this.getRecipe();

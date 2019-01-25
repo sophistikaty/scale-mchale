@@ -49,8 +49,8 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   getRecipes(): Observable<Recipe[]> {
-    console.log('adding recipe');
-    this.nutritionService.add('mock nutrition from recipe');
+    // console.log('adding recipe');
+    // this.nutritionService.add('mock nutrition from recipe');
     return this.http.get<Recipe[]>(this.recipesUrl)
       .pipe(
         tap(_ => console.log('fetched recipes', _)),

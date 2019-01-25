@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Scale } from '../scale';
 import { Recipe } from '../recipe';
 
@@ -11,7 +11,11 @@ import { NutritionService } from '../nutrition.service';
   templateUrl: './scale.component.html',
   styleUrls: ['./scale.component.scss']
 })
+
 export class ScaleComponent implements OnInit {
+
+@Input() selectedRecipe: Recipe;
+
  scale: Scale = {
    id: 2,
    name: 'juicy pears'
@@ -20,7 +24,6 @@ export class ScaleComponent implements OnInit {
  conversions: object;
  recipes: Recipe[];
 
- selectedRecipe: Recipe;
  onSelect(recipe: Recipe): void {
    this.selectedRecipe = recipe;
  }
@@ -35,11 +38,12 @@ getRecipes(): void {
     .subscribe(recipes => this.recipes = recipes);
 }
 
-  constructor(private conversionService: ConversionService, 
+  constructor(private conversionService: ConversionService,
               private recipeService: RecipeService,
               public nutritionService: NutritionService) { }
 
   ngOnInit() {
+    console.log('this.selectedRecipe?', this.selectedRecipe);
     this.getConversions();
     this.getRecipes();
     console.log('nutrition info', this.nutritionService.nutriitonInfo);

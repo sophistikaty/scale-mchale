@@ -13,13 +13,15 @@ import { FormsModule } from '@angular/forms';
 import { ScaleComponent } from './scale/scale.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ScaleComponent,
     RecipeComponent,
-    RecipeDetailComponent
+    RecipeDetailComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

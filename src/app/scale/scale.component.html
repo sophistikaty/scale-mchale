@@ -6,17 +6,6 @@
     {{scale.name}}
     {{scale.id}}
 
-
-    <!-- Displaying a list -->
-    <h2>My Recipes</h2>
-    <ul class="recipes">
-    <li *ngFor="let recipe of mockRecipes"
-            [class.selected]="hero === selectedHero"
-            (click)="onSelect(recipe)">
-        <span class="delicious">{{recipe.id}}</span> {{recipe.name}}
-    </li>
-    </ul>
-
     <!-- click binding -->
     <div *ngIf="selectedRecipe">
         <h2>{{selectedRecipe.name | uppercase}} Details</h2>

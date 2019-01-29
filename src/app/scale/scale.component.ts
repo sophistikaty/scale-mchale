@@ -13,8 +13,8 @@ import { NutritionService } from '../nutrition.service';
 })
 
 export class ScaleComponent implements OnInit {
-
 @Input() selectedRecipe: Recipe;
+// selectedRecipe: Recipe;
 
  scale: Scale = {
    id: 2,
@@ -35,7 +35,10 @@ export class ScaleComponent implements OnInit {
 
 getRecipes(): void {
   this.recipeService.getRecipes()
-    .subscribe(recipes => this.recipes = recipes);
+    .subscribe(recipes => {
+      this.recipes = recipes;
+      this.selectedRecipe =  this.selectedRecipe || recipes.pop();
+    });
 }
 
   constructor(private conversionService: ConversionService,
@@ -43,7 +46,6 @@ getRecipes(): void {
               public nutritionService: NutritionService) { }
 
   ngOnInit() {
-    console.log('this.selectedRecipe?', this.selectedRecipe);
     this.getConversions();
     this.getRecipes();
     console.log('nutrition info', this.nutritionService.nutriitonInfo);

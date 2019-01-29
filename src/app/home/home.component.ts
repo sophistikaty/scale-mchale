@@ -14,7 +14,10 @@ export class HomeComponent implements OnInit {
   getRecipe(id?: number): void {
     if (!id) {
       this.recipeService.getRecipes()
-      .subscribe(recipes => this.recipe = recipes.pop());
+      .subscribe(recipes => {
+        this.recipe = recipes.pop();
+        console.log('home recipe ', this.recipe);
+      });
       return;
     }
     this.recipeService.getRecipe(id)

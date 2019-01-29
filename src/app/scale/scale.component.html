@@ -1,14 +1,6 @@
 <div>
-    <!-- user input -->
-    <label>name:
-      <input [(ngModel)]="scale.name" placeholder="name">
-    </label>
-    {{scale.name}}
-    {{scale.id}}
-
-    <!-- click binding -->
     <div *ngIf="selectedRecipe">
-        <h2>{{selectedRecipe.name | uppercase}} Details</h2>
+        <h2>{{selectedRecipe.name}} </h2>
         <div><span>id: </span>{{selectedRecipe.id}}</div>
         <div>
         <label>name:

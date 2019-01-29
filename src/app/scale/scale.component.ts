@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Scale } from '../scale';
-import { Recipe } from '../recipe';
+import { Scale } from '../types/scale';
+import { Recipe } from '../types/recipe';
 
-import { ConversionService } from '../conversion.service';
-import { RecipeService } from '../recipe.service';
-import { NutritionService } from '../nutrition.service';
+import { ConversionService } from '../core/services/conversion.service';
+import { RecipeService } from '../core/services/recipe.service';
+import { NutritionService } from '../core/services/nutrition.service';
 
 @Component({
   selector: 'app-scale',

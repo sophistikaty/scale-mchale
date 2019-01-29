@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Recipe } from './recipe';
+import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
 
 
@@ -43,7 +43,7 @@ private handleError<T> (operation = 'operation', result?: T) {
    getRecipe(id: number): Observable<Recipe> {
     const url = `${this.recipesUrl}/${id}`;
     return this.http.get<Recipe>(url).pipe(
-      tap(_ => console.log(`fetched recipe id=${id}`,_)),
+      tap(_ => console.log(`fetched recipe id=${id}`, _)),
       catchError(this.handleError<Recipe>(`getRecipe id=${id}`))
     );
   }

@@ -7,6 +7,8 @@ import { InMemoryDataService } from './core/services/in-memory-data.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { APP_INITIALIZER } from '@angular/core';
+import { AppConfig } from './app.config';
 
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +16,10 @@ import { ScaleComponent } from './scale/scale.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { HomeComponent } from './home/home.component';
+
+export function initializeApp(appConfig: AppConfig) {
+  return () => appConfig.load();
+}
 
 @NgModule({
   declarations: [
@@ -32,7 +38,12 @@ import { HomeComponent } from './home/home.component';
       InMemoryDataService, { dataEncapsulation: false }
     )
   ],
-  providers: [],
+  providers: [
+    AppConfig,
+       { provide: APP_INITIALIZER,
+         useFactory: initializeApp,
+         deps: [AppConfig], multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

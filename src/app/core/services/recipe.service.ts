@@ -5,7 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
-
+import { AppConfig } from 'src/app/app.config';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,6 +16,7 @@ const httpOptions = {
 })
 
 export class RecipeService {
+  protected apiKeys = AppConfig.settings.apiKeys;
 
   recipes: Recipe[];
   private recipesUrl = 'api/recipes';  // URL to web api

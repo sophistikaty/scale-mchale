@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
 import { AppConfig } from 'src/app/app.config';
+import { initializeApp } from 'src/app/app.module';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,7 +17,7 @@ const httpOptions = {
 })
 
 export class RecipeService {
-  protected apiKeys = AppConfig.settings.apiKeys;
+  protected config: object;
 
   recipes: Recipe[];
   private recipesUrl = 'api/recipes';  // URL to web api
@@ -66,6 +67,9 @@ private handleError<T> (operation = 'operation', result?: T) {
     );
   }
 
-  constructor(private http: HttpClient,
-    private nutritionService: NutritionService) { }
+  constructor(private appConfig: AppConfig,
+    private http: HttpClient,
+    private nutritionService: NutritionService) {
+      this.config = initializeApp(appConfig)();
+  }
 }

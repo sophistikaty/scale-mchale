@@ -38,8 +38,8 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-src/app/app.config.ts
 
 # System Files
 .DS_Store
 Thumbs.db
+src/app/app.config.ts

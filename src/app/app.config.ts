@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ScaleConfig } from '../app/app-config.model';
 
 @Injectable()
 export class AppConfig {
-    static config: ScaleConfig;
+    static config: object;
     constructor() {}
     config = {
         apiKeys: {

@@ -17,9 +17,9 @@ const httpOptions = {
 })
 
 export class RecipeService {
-  protected config: object;
 
   recipes: Recipe[];
+  private apiKeys = this.appConfig.config.apiKeys;
   private recipesUrl = 'api/recipes';  // URL to web api
 
   /**
@@ -51,8 +51,8 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   getRecipes(): Observable<Recipe[]> {
-    // console.log('adding recipe');
-    // this.nutritionService.add('mock nutrition from recipe');
+    console.log('adding recipe');
+    this.nutritionService.add('mock nutrition from recipe');
     return this.http.get<Recipe[]>(this.recipesUrl)
       .pipe(
         tap(_ => console.log('fetched recipes', _)),
@@ -67,9 +67,29 @@ private handleError<T> (operation = 'operation', result?: T) {
     );
   }
 
+  searchRecipes(searchInput: string) {
+    const edamam = 'https://api.edamam.com/search';
+    const accessConfig = `&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`;
+    const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
+
+    return this.http.get(edamamReqUrl)
+    .pipe(
+      tap(res => console.log('search results ', res)),
+      catchError(this.handleError('searchError', []))
+    );
+
+    // ({
+//   method: 'GET',
+//   url: requestUrl
+// }).then(function successCallback(response) {
+// 	ctrl.searchResults = response.data.hits;
+//   }, function errorCallback(response) {
+//   	console.log('error response ', response)
+//   });
+  }
+
   constructor(private appConfig: AppConfig,
     private http: HttpClient,
     private nutritionService: NutritionService) {
-      this.config = initializeApp(appConfig)();
   }
 }

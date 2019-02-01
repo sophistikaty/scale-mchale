@@ -16,6 +16,7 @@ import { ScaleComponent } from './scale/scale.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { HomeComponent } from './home/home.component';
+import { RecipeSearchComponent } from './recipe-search/recipe-search.component';
 
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
@@ -27,7 +28,8 @@ export function initializeApp(appConfig: AppConfig) {
     ScaleComponent,
     RecipeComponent,
     RecipeDetailComponent,
-    HomeComponent
+    HomeComponent,
+    RecipeSearchComponent
   ],
   imports: [
     BrowserModule,

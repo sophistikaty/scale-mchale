@@ -6,7 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
 import { AppConfig } from 'src/app/app.config';
-import { initializeApp } from 'src/app/app.module';
+// import { initializeApp } from 'src/app/app.module';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -35,7 +35,7 @@ private handleError<T> (operation = 'operation', result?: T) {
     console.error(error); // log to console instead
 
     // TODO: better job of transforming error for user consumption
-    console.log(`${operation} failed: ${error.message}`);
+    // console.log(`${operation} failed: ${error.message}`);
 
     // Let the app keep running by returning an empty result.
     return of(result as T);
@@ -67,12 +67,15 @@ private handleError<T> (operation = 'operation', result?: T) {
     );
   }
 
-  searchRecipes(searchInput: string) {
+  searchRecipes(searchInput: string): Observable<object> {
     const edamam = 'https://api.edamam.com/search';
     const accessConfig = `&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`;
     const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
 
-    return this.http.get(edamamReqUrl)
+    return this.http.get<Object>(edamamReqUrl)
+    // .then(function(){
+    //   console.log('res ', res);
+    // })
     .pipe(
       tap(res => console.log('search results ', res)),
       catchError(this.handleError('searchError', []))

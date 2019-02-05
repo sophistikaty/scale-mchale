@@ -1,9 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-// import { Observable, of } from 'rxjs';
-// import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
 import { RecipeService } from '../core/services/recipe.service';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
+import { map, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-search',
@@ -19,17 +17,22 @@ export class RecipeSearchComponent implements OnInit {
     if (!this.searchInput || this.searchInput === this.prevInput) {
       return;
     }
-    return this.recipeService.searchRecipes(this.searchInput)
-    .pipe(debounceTime(500)).subscribe(
-      function(res) {
-        // const { hits = []} = res;
-        this.searchResults = res;
-        this.prevInput = this.searchInput;
-      });
+    console.log('searching');
+    // return this.recipeService.searchRecipes(this.searchInput)
+    // .pipe(debounceTime(500)).subscribe(
+    //   function(res) {
+    //     // const { hits = []} = res;
+    //     this.searchResults = res;
+    //     this.prevInput = this.searchInput;
+    //   });
   }
 
   constructor(private recipeService: RecipeService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    fromEvent(document, 'keyup')
+    .pipe(map(event => console.log(`Event time: ${event.timeStamp}, ${this.searchInput}`)))
+    .subscribe(val => console.log(val));
+  }
 
 }

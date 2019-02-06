@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RecipeService } from '../core/services/recipe.service';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -18,13 +18,13 @@ export class RecipeSearchComponent implements OnInit {
       return;
     }
     console.log('searching input ', this.searchInput);
-    return this.recipeService.searchRecipes(this.searchInput);
-    // .pipe(debounceTime(500)).subscribe(
-    //   function(res) {
-    //     // const { hits = []} = res;
-    //     this.searchResults = res;
-    //     this.prevInput = this.searchInput;
-    //   });
+    return this.recipeService.searchRecipes(this.searchInput)
+    .subscribe(
+      function(res) {
+        // const { hits = []} = res;
+        this.searchResults = res;
+        this.prevInput = this.searchInput;
+      });
   }
 
   constructor(private recipeService: RecipeService) {}

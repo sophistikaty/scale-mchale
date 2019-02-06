@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
 import { AppConfig } from 'src/app/app.config';
-// import { initializeApp } from 'src/app/app.module';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,7 +19,7 @@ export class RecipeService {
 
   recipes: Recipe[];
   private apiKeys = this.appConfig.config.apiKeys;
-  private recipesUrl = 'api/recipes';  // URL to web api
+  private recipesUrl = 'api/recipe';  // URL to web api
 
   /**
  * Handle Http operation that failed.
@@ -67,28 +66,12 @@ private handleError<T> (operation = 'operation', result?: T) {
     );
   }
 
-  searchRecipes(searchInput: string): Observable<object> {
+  searchRecipes(searchInput: string) {
     const edamam = 'https://api.edamam.com/search';
     const accessConfig = `&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`;
     const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
 
-    return this.http.get<Object>(edamamReqUrl)
-    // .then(function(){
-    //   console.log('res ', res);
-    // })
-    .pipe(
-      tap(res => console.log('search results ', res)),
-      catchError(this.handleError('searchError', []))
-    );
-
-    // ({
-//   method: 'GET',
-//   url: requestUrl
-// }).then(function successCallback(response) {
-// 	ctrl.searchResults = response.data.hits;
-//   }, function errorCallback(response) {
-//   	console.log('error response ', response)
-//   });
+    return this.http.get(edamamReqUrl);
   }
 
   constructor(private appConfig: AppConfig,

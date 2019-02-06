@@ -2,6 +2,27 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.2.
 
+## Config
+Create a file `src/app/app.config.ts` that looks like this:
+`import { Injectable } from '@angular/core';
+
+@Injectable()
+export class AppConfig {
+    static config: object;
+    constructor() {}
+    config = {
+        apiKeys: {
+            edamam: {
+                app_id: '[YOUR_APP_ID]',
+                app_key: '[YOUR_APP_KEY]'
+            }
+        }
+    };
+    load() {
+        return this.config;
+    }
+}`
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

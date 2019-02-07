@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RecipeService } from '../core/services/recipe.service';
 import { fromEvent } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Recipe } from '../types/recipe';
 
 @Component({
   selector: 'app-recipe-search',
@@ -10,30 +11,38 @@ import { map, debounceTime } from 'rxjs/operators';
 })
 export class RecipeSearchComponent implements OnInit {
   @Input() searchInput: string;
-  private prevInput: string;
-  public searchResults: object[];
+  public searchResults: Recipe[];
+
+  mapToRecipes (data) {
+    const { hits = [] } = data;
+    return hits.map(function(hit, index: number) {
+      const { label, ingredientLines, image } = hit && hit.recipe;
+      return new Recipe(index, label, ingredientLines, image);
+    });
+  }
 
   onSearch() {
-    if (!this.searchInput || this.searchInput === this.prevInput) {
+    const component = this;
+    if (!this.searchInput) {
       return;
     }
-    console.log('searching input ', this.searchInput);
     return this.recipeService.searchRecipes(this.searchInput)
     .subscribe(
-      function(res) {
-        // const { hits = []} = res;
-        this.searchResults = res;
-        this.prevInput = this.searchInput;
+      function(response) {
+        component.searchResults = component.mapToRecipes(response) || [];
       });
+  }
+
+  private initInputObserver() {
+    fromEvent(document, 'keyup')
+    .pipe(debounceTime(500), distinctUntilChanged(),
+      map(() => this.onSearch()))
+    .subscribe();
   }
 
   constructor(private recipeService: RecipeService) {}
 
   ngOnInit() {
-    fromEvent(document, 'keyup')
-    .pipe(debounceTime(500),
-    map(() => this.onSearch()))
-    .subscribe(val => console.log(val));
+    this.initInputObserver();
   }
-
 }

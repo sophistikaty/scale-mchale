@@ -4,5 +4,12 @@
     id="recipeSearch"
     placeholder="what sounds good?">
   </label>
-
+<ul>
+  <li *ngFor="let result of searchResults">
+    <div class="recipe">
+      {{result.name}}
+      <img src="{{result.imageUrl}}" alt="{{result.name}}"/>
+    </div>
+  </li>
+</ul>
 </div>

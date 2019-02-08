@@ -8,6 +8,9 @@
   <li *ngFor="let result of searchResults">
     <div class="recipe">
       {{result.name}}
+      <button (click)="addToMyRecipes(result, $index)">
+        add
+      </button>
       <img src="{{result.imageUrl}}" alt="{{result.name}}"/>
     </div>
   </li>

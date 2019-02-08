@@ -20,6 +20,9 @@ export class RecipeSearchComponent implements OnInit {
       return new Recipe(index, label, ingredientLines, image);
     });
   }
+  addToMyRecipes( recipe: Recipe, index: number ) {
+    console.log('adding recipe, index ', recipe, index);
+  }
 
   onSearch() {
     const component = this;

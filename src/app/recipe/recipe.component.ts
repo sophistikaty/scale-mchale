@@ -11,6 +11,9 @@ import { RecipeService } from '../core/services/recipe.service';
 export class RecipeComponent implements OnInit {
   mockRecipes: Recipe[];
 
+  public myRecipes = JSON.parse(sessionStorage.getItem('recipes')) || {};
+  public hasRecipes = Object.keys(this.myRecipes).length > 0;
+
   getRecipes(): void {
     this.recipeService.getRecipes()
       .subscribe(recipes => this.mockRecipes = recipes);

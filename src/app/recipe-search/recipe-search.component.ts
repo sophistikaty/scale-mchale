@@ -11,7 +11,11 @@ import { Recipe } from '../types/recipe';
 })
 export class RecipeSearchComponent implements OnInit {
   @Input() searchInput: string;
+
   public searchResults: Recipe[];
+
+  private visibleIndex: number;
+
 
   mapToRecipes (data) {
     const { hits = [] } = data;
@@ -20,8 +24,20 @@ export class RecipeSearchComponent implements OnInit {
       return new Recipe(index, label, ingredientLines, image);
     });
   }
+
+  updateSavedRecipes( library: object ) {
+    sessionStorage.setItem('recipes', JSON.stringify(library));
+  }
+
   addToMyRecipes( recipe: Recipe, index: number ) {
-    console.log('adding recipe, index ', recipe, index);
+    if (!index) {
+      index = this.visibleIndex || null;
+    }
+
+    const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
+    recipeLib[recipe.id] = recipe;
+
+    this.updateSavedRecipes(recipeLib);
   }
 
   onSearch() {

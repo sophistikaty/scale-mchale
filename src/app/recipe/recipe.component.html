@@ -1,8 +1,10 @@
-<h2>cardbox</h2>
-    <ul class="recipes">
-    <li *ngFor="let recipe of mockRecipes">
-        <a routerLink="/detail/{{recipe.id}}">
-          <span class="delicious">{{recipe.id}}</span> {{recipe.name}} 
-        </a>
-    </li>
-    </ul>
+<h2 *ngIf="hasRecipes">cardbox</h2>
+    <ul>
+        <li *ngFor="let recipe of myRecipes | keyvalue">
+            <a routerLink="/detail/{{recipe.value.id}}">
+                <span class="delicious">{{recipe.value.id}}</span> {{recipe.value.name}} 
+            </a>
+            <button (click)="selectRecipe(recipe.value)">select</button>
+            <button (click)="deleteRecipe(recipe.value)">delete</button>
+        </li>
+    </ul> 

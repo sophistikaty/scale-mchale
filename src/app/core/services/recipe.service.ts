@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
+import { ConversionService } from './conversion.service';
 import { AppConfig } from 'src/app/app.config';
 import { Ingredient } from 'src/app/types/ingredient';
 
@@ -67,9 +68,33 @@ private handleError<T> (operation = 'operation', result?: T) {
     );
   }
 
-  public textToIngredients(textArray: string[]): Ingredient[] {
+  getFloatFromTextFraction (text: string) {
+    const [textFraction = null] = /[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
+    const [dividend = null, divisor = null] = textFraction && textFraction.split('/') || [];
+    return parseInt(dividend)/parseInt(divisor);
+  };
+
+  getIngredientQuantity (text: string) {
+    return this.getFloatFromTextFraction(text) || parseInt(text);
+  }
+
+  getIngredientMeasure (text: string) {
+    const measureConvert = this.conversionService.getConversions();
+    const existingMeasurement = Object.keys(measureConvert).find(function(measurement){
+    return measureConvert[measurement].aliases.find(function(alias){
+      return text.indexOf(alias) !== -1;
+      });
+    });
+    return existingMeasurement;
+    // ? existingMeasurement : addIngredientMeasurement(ingredient);
+  }
+
+  textToIngredients(textArray: string[]): Ingredient[] {
+    const service = this;
     return textArray.map(function(ingredient: string) {
-      return new Ingredient(ingredient);
+      const quantity = service.getIngredientQuantity(ingredient);
+      const measure = service.getIngredientMeasure(ingredient);
+      return new Ingredient(ingredient, quantity);
     });
   }
 
@@ -93,6 +118,7 @@ private handleError<T> (operation = 'operation', result?: T) {
 
   constructor(private appConfig: AppConfig,
     private http: HttpClient,
-    private nutritionService: NutritionService) {
+    private nutritionService: NutritionService,
+    private conversionService: ConversionService) {
   }
 }

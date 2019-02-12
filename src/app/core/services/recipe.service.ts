@@ -6,6 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
 import { AppConfig } from 'src/app/app.config';
+import { Ingredient } from 'src/app/types/ingredient';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,7 +20,7 @@ export class RecipeService {
 
   recipes: Recipe[];
   private apiKeys = this.appConfig.config.apiKeys;
-  private recipesUrl = 'api/recipe';  // URL to web api
+  private recipesUrl = 'api/recipe'; 
 
   /**
  * Handle Http operation that failed.
@@ -64,6 +65,22 @@ private handleError<T> (operation = 'operation', result?: T) {
       tap(_ => console.log(`updated recipe id=${recipe.id}`, _)),
       catchError(this.handleError<any>('updateRecipe'))
     );
+  }
+
+  public textToIngredients(textArray: string[]): Ingredient[] {
+    return textArray.map(function(ingredient: string) {
+      return new Ingredient(ingredient);
+    });
+  }
+
+  mapToRecipes (data) {
+    const service = this;
+    const { hits = [] } = data;
+    return hits.map(function(hit, index: number) {
+      const { label, ingredientLines, image } = hit && hit.recipe;
+      const ingredients = service.textToIngredients(ingredientLines);
+      return new Recipe(index, label, ingredients, image);
+    });
   }
 
   searchRecipes(searchInput: string) {

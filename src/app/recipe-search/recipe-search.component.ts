@@ -14,25 +14,14 @@ export class RecipeSearchComponent implements OnInit {
 
   public searchResults: Recipe[];
 
-  private visibleIndex: number;
-
-
-  mapToRecipes (data) {
-    const { hits = [] } = data;
-    return hits.map(function(hit, index: number) {
-      const { label, ingredientLines, image } = hit && hit.recipe;
-      return new Recipe(index, label, ingredientLines, image);
-    });
-  }
-
   updateSavedRecipes( library: object ) {
     sessionStorage.setItem('recipes', JSON.stringify(library));
   }
 
   addToMyRecipes( recipe: Recipe, index: number ) {
-    if (!index) {
-      index = this.visibleIndex || null;
-    }
+    // if (!index) {
+    //   index = this.visibleIndex || null;
+    // }
 
     const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
     recipeLib[recipe.id] = recipe;
@@ -48,7 +37,7 @@ export class RecipeSearchComponent implements OnInit {
     return this.recipeService.searchRecipes(this.searchInput)
     .subscribe(
       function(response) {
-        component.searchResults = component.mapToRecipes(response) || [];
+        component.searchResults = component.recipeService.mapToRecipes(response) || [];
       });
   }
 

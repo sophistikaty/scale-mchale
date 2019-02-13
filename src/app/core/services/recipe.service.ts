@@ -21,7 +21,8 @@ export class RecipeService {
 
   recipes: Recipe[];
   private apiKeys = this.appConfig.config.apiKeys;
-  private recipesUrl = 'api/recipe'; 
+  private recipesUrl = 'api/recipe';
+  private selectedRecipe: Recipe;
 
   /**
  * Handle Http operation that failed.
@@ -78,23 +79,33 @@ private handleError<T> (operation = 'operation', result?: T) {
     return this.getFloatFromTextFraction(text) || parseInt(text);
   }
 
-  getIngredientMeasure (text: string) {
+  addIngredientMeasurement(ingredientText: string, quantity: number): string {
+    const textWithoutQuantity = ingredientText.slice(ingredientText.indexOf(quantity.toString())+1);
+    const measurementName = textWithoutQuantity.split(' ').find(function(term) {
+      return term !== '';
+    });
+    // need a measurement conversion generator service?
+    this.conversionService.addMeasurement(measurementName);
+    return measurementName;
+  }
+
+  getIngredientMeasure (ingredientText: string, quantity: number): string {
     const measureConvert = this.conversionService.getConversions();
     const existingMeasurement = Object.keys(measureConvert).find(function(measurement){
     return measureConvert[measurement].aliases.find(function(alias){
-      return text.indexOf(alias) !== -1;
+      return ingredientText.indexOf(alias) !== -1;
       });
     });
-    return existingMeasurement;
-    // ? existingMeasurement : addIngredientMeasurement(ingredient);
+    return existingMeasurement ? existingMeasurement : this.addIngredientMeasurement(ingredientText, quantity);
   }
 
   textToIngredients(textArray: string[]): Ingredient[] {
     const service = this;
-    return textArray.map(function(ingredient: string) {
-      const quantity = service.getIngredientQuantity(ingredient);
-      const measure = service.getIngredientMeasure(ingredient);
-      return new Ingredient(ingredient, quantity);
+    return textArray.map(function(ingredientText: string) {
+      const quantity = service.getIngredientQuantity(ingredientText);
+      const measure = service.getIngredientMeasure(ingredientText, quantity);
+      const food = ingredientText.split(measure).pop();
+      return new Ingredient(ingredientText, quantity, measure, food);
     });
   }
 
@@ -114,6 +125,31 @@ private handleError<T> (operation = 'operation', result?: T) {
     const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
 
     return this.http.get(edamamReqUrl);
+  }
+
+  getLocalStorageRecipes() {
+    const recipeObj: object = JSON.parse(sessionStorage.getItem('recipes')) || {};
+    // Object.keys(recipeObj).map(recipeId: string){
+    //   const localRecipe = new Recipe()
+    //   return recipeObj[recipeId];
+    // }
+  }
+
+  setupLocalDefault() {
+    // this.recipes = 
+    this.getLocalStorageRecipes();
+    this.selectedRecipe = this.recipes.pop();
+  }
+
+  setSelectedRecipe(recipe: Recipe): void{
+    this.selectedRecipe = recipe;
+  }
+
+  getSelectedRecipe(): Recipe {
+    if (!this.selectedRecipe) {
+      this.setupLocalDefault();
+    }
+    return this.selectedRecipe;
   }
 
   constructor(private appConfig: AppConfig,

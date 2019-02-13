@@ -21,34 +21,27 @@ export class RecipeComponent implements OnInit {
       .subscribe(recipes => this.mockRecipes = recipes);
   }
 
-  setupRecipe() {
-    const { ingredients = []} = this.recipe;
-    for (const ingredient of ingredients) {
-      console.log('ingredient ', ingredient);
-      let { quantity, text } = ingredient;
-      // quantity = getIngredientQuantity(ingredient);
-			// let {food, measure, prevQuantity, prevMeas } = ingredient; 
-			// measure = getIngredientMeasure(ingredient);
-			// food = text.split(measure).pop();
-
-			// prevQuantity = quantity;
-			// prevMeas = measure;
-		}
-  }
+  // setupRecipe() {
+  //   const { ingredients = []} = this.recipe;
+  //   for (const ingredient of ingredients) {
+  //     console.log('ingredient ', ingredient);
+  //     let { quantity, prevQuantity, measure, prevMeasure, food, text } = ingredient;
+  // 	}
+  // }
 
   selectRecipe(recipe: Recipe): void {
-    if (recipe.id) {
-      this.visibleIndex = recipe.id;
-    }
+    this.recipeService.setSelectedRecipe(recipe);
 
-		this.recipe = recipe;
-		this.setupRecipe();
+    // if (recipe.id) {
+    //   this.visibleIndex = recipe.id;
+    // }
+    // this.setupRecipe();
   }
 
   constructor(private recipeService: RecipeService) { }
   ngOnInit() {
     // this.getRecipes();
-    this.setupRecipe();
+    // this.setupRecipe();
 
   }
 

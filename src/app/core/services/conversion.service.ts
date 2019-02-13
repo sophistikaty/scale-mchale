@@ -24,5 +24,15 @@ export class ConversionService {
     return this.conversions;
   }
 
+  addMeasurement(measurementName: string): object {
+    this.conversions[measurementName] = {
+      name: measurementName,
+      base: 1,
+      aliases: [measurementName]
+    };
+
+    return this.conversions;
+  }
+
   constructor() { }
 }

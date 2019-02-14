@@ -127,21 +127,22 @@ private handleError<T> (operation = 'operation', result?: T) {
     return this.http.get(edamamReqUrl);
   }
 
-  getLocalStorageRecipes() {
-    const recipeObj: object = JSON.parse(sessionStorage.getItem('recipes')) || {};
-    // Object.keys(recipeObj).map(recipeId: string){
-    //   const localRecipe = new Recipe()
-    //   return recipeObj[recipeId];
-    // }
+  getLocalStorageRecipeArr(): Recipe[] {
+    // const service = this;
+    const recipeLib: object = JSON.parse(sessionStorage.getItem('recipes')) || {};
+    return Object.keys(recipeLib).map(function(recipeId: string): Recipe {
+      const localRecipe = recipeLib[recipeId];
+      localRecipe.ingredients = localRecipe.ingredients as Ingredient[];
+      return localRecipe as Recipe;
+    });
   }
 
   setupLocalDefault() {
-    // this.recipes = 
-    this.getLocalStorageRecipes();
+    this.recipes = this.getLocalStorageRecipeArr();
     this.selectedRecipe = this.recipes.pop();
   }
 
-  setSelectedRecipe(recipe: Recipe): void{
+  setSelectedRecipe(recipe: Recipe): void {
     this.selectedRecipe = recipe;
   }
 

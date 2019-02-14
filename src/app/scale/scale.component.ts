@@ -22,6 +22,7 @@ export class ScaleComponent implements OnInit {
  };
 
  conversions: object;
+ conversionsArr: Array<object>;
  recipes: Recipe[];
 
  onSelect(recipe: Recipe): void {
@@ -29,8 +30,11 @@ export class ScaleComponent implements OnInit {
  }
 
  getConversions(): void {
+  const component = this;
   this.conversions = this.conversionService.getConversions();
-  console.log(this.conversions);
+  this.conversionsArr = Object.keys(this.conversions).map(function(measName: string) {
+    return component.conversions[measName];
+  });
 }
 
 getRecipes(): void {
@@ -38,6 +42,7 @@ getRecipes(): void {
     .subscribe(recipes => {
       this.recipes = recipes;
       this.selectedRecipe =  this.selectedRecipe || recipes.pop();
+      console.log('selected recipe in scale ', this.selectedRecipe);
     });
 }
 

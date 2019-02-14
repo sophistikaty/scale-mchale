@@ -128,7 +128,6 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   getLocalStorageRecipeArr(): Recipe[] {
-    // const service = this;
     const recipeLib: object = JSON.parse(sessionStorage.getItem('recipes')) || {};
     return Object.keys(recipeLib).map(function(recipeId: string): Recipe {
       const localRecipe = recipeLib[recipeId];

@@ -1,12 +1,36 @@
 <div>
     <div *ngIf="selectedRecipe">
         <h2>{{selectedRecipe.name}} </h2>
-        <div><span>id: </span>{{selectedRecipe.id}}</div>
+        <div><span>id:{{selectedRecipe.id}}</span></div>
         <div>
-        <label>name:
-            <input [(ngModel)]="selectedRecipe.name" placeholder="name">
-        </label>
+            <label>name:
+                <input [(ngModel)]="selectedRecipe.name" placeholder="name">
+            </label>
+            <ul [ngStyle]="{'background':'transparent url(' + selectedRecipe.imageUrl + ')'}"
+                class ="recipeDisplay">
+                <li *ngFor="let ingredient of selectedRecipe.ingredients">
+                    <div>{{ingredient.text}}</div>
+                    <span>{{ingredient.food}}</span>
+                    <!-- use observable to track input change? -->
+                    <input [(ngModel)]="ingredient.quantity"/>
+                    <select [(ngModel)]="ingredient.measure">
+                        <!-- Populate 'selected' option if its the same as recipe default -->
+                        <!-- <span *ngIf="meas.name === ingredient.measure">
+                            <option *ngFor="let meas of conversionsArr" 
+                                value="{{meas.name}}" selected>
+                                {{meas.name}}
+                            </option>
+                        </span> -->
+                        <!-- Populate not-selected option if its the same as recipe default -->
+                        <!-- <span *ngIf="meas.name !== ingredient.measure"> -->
+                            <option *ngFor="let meas of conversionsArr"
+                                value="{{meas.name}}">
+                                {{meas.name}}
+                            </option>
+                        <!-- </span> -->
+                    </select>
+                </li>
+            </ul>
         </div>
     </div>
-
 </div>

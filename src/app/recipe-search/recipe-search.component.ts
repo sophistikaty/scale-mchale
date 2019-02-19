@@ -38,7 +38,7 @@ export class RecipeSearchComponent implements OnInit {
   }
 
   private initInputObserver() {
-    fromEvent(document, 'keyup')
+    fromEvent(document.querySelector('#recipeSearch'), 'keyup')
     .pipe(debounceTime(500), distinctUntilChanged(),
       map(() => this.onSearch()))
     .subscribe();

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Recipe } from 'src/app/types/recipe';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class ConversionService {
 
   getConversions(): object {
     return this.conversions;
+  }
+
+  quantityChanged(recipe: Recipe, index: number ) {
+    console.log('recipe, ingredientIndex ', recipe, index );
   }
 
   addMeasurement(measurementName: string): object {

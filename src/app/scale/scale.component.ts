@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { fromEvent } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { Scale } from '../types/scale';
 import { Recipe } from '../types/recipe';
 
@@ -43,7 +46,26 @@ getRecipes(): void {
       this.recipes = recipes;
       this.selectedRecipe =  this.selectedRecipe || recipes.pop();
       console.log('selected recipe in scale ', this.selectedRecipe);
+      this.initQuantityObservers();
     });
+}
+
+getIndexFromEvent(e: Event): number {
+  const elementId = e.srcElement.id;
+  const idStr = elementId.split('-').pop();
+  return this.recipeService.getIngredientQuantity(idStr);
+}
+
+onQuantityChanged( e: Event) {
+  const ingredientIndex = this.getIndexFromEvent(e);
+  this.conversionService.quantityChanged(this.selectedRecipe, ingredientIndex);
+}
+
+private initQuantityObservers() {
+  fromEvent(document.querySelectorAll('input.quantity'), 'keyup')
+  .pipe(debounceTime(500), distinctUntilChanged(),
+    map((e) => this.onQuantityChanged(e)))
+  .subscribe();
 }
 
   constructor(private conversionService: ConversionService,

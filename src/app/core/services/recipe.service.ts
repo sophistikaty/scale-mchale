@@ -69,14 +69,8 @@ private handleError<T> (operation = 'operation', result?: T) {
     );
   }
 
-  getFloatFromTextFraction (text: string) {
-    const [textFraction = null] = /[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
-    const [dividend = null, divisor = null] = textFraction && textFraction.split('/') || [];
-    return parseInt(dividend)/parseInt(divisor);
-  };
-
-  getIngredientQuantity (text: string) {
-    return this.getFloatFromTextFraction(text) || parseInt(text);
+  getIngredientQuantity (text: string): number {
+    return this.conversionService.toNumber(text);
   }
 
   addIngredientMeasurement(ingredientText: string, quantity: number): string {

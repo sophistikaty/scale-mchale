@@ -9,7 +9,6 @@
             <div class ="recipeImage"><img src="{{selectedRecipe.imageUrl}}"></div>
             <ul class ="recipeDisplay">
                 <li *ngFor="let ingredient of selectedRecipe.ingredients; index as i;">
-                    <div class="full-text">{{ingredient.text}}</div>
                     <span>{{ingredient.food | titlecase}}</span>
                     <!-- use observable to track input change? -->
                     <input class="quantity" id="quantity-{{i}}" [(ngModel)]="ingredient.quantity"/>
@@ -29,6 +28,7 @@
                             </option>
                         <!-- </span> -->
                     </select>
+                    <div class="full-text">{{ingredient.text}}</div>
                 </li>
             </ul>
         </div>

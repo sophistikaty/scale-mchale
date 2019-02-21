@@ -62,7 +62,11 @@ onQuantityChanged( e: Event) {
 }
 
 private initQuantityObservers() {
-  fromEvent(document.querySelectorAll('input.quantity'), 'keyup')
+  const quantityInputs = document.querySelectorAll('input.quantity');
+  if (!quantityInputs) {
+    return;
+  }
+  fromEvent(quantityInputs, 'keyup')
   .pipe(debounceTime(500), distinctUntilChanged(),
     map((e) => this.onQuantityChanged(e)))
   .subscribe();

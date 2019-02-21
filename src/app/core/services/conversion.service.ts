@@ -29,9 +29,21 @@ export class ConversionService {
   }
 
   getFloatFromTextFraction (text: string) {
-    const [textFraction = null] = /[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
-    const [dividend = null, divisor = null] = textFraction && textFraction.split('/') || [];
-    return parseInt(dividend) / parseInt(divisor);
+    // [[1-9][0-9]*\s*]?) integer preceding fraction
+    const [ textInteger = null ] = /[[1-9][0-9]*\s*?]*/g.exec(text) || [];
+    // [1-9][0-9]*\/[1-9][0-9]* fraction
+    const [ textFraction = null ] = /[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
+    const [ numberMatch = null ] = /([[1-9][0-9]*\s*]?)[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
+
+    if ( !textFraction ) {
+      return parseInt(textInteger);
+    }
+
+    const [ dividend = null, divisor = null ] = textFraction.split('/') || [];
+    const float = parseInt(textInteger)
+    ? ( (parseInt(textInteger) * parseInt(divisor)) + parseInt(dividend)) / parseInt(divisor)
+    : parseInt(dividend) / parseInt(divisor)
+    return float;
   }
 
   toNumber(text: string): number {

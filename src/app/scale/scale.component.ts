@@ -66,7 +66,6 @@ getRecipes(): void {
     .subscribe(recipes => {
       this.recipes = recipes;
       this.selectedRecipe =  this.selectedRecipe || recipes.pop();
-      console.log('selected recipe in scale ', this.selectedRecipe);
       this.initQuantityObservers();
     });
 }

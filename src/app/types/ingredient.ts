@@ -1,17 +1,17 @@
 export class Ingredient {
 
-    text: string;
+    originalText: string;
     quantity: number;
     prevQuantity: number;
     measure: string;
     prevMeasure: string;
     food: string;
 
-    constructor(text: string = '',
+    constructor(originalText: string = '',
                 quantity: number = 1,
                 measure: string = '',
                 food: string = '') {
-      this.text = text;
+      this.originalText = originalText;
       this.quantity = quantity;
       this.prevQuantity = this.quantity;
       this.measure = measure;

@@ -12,21 +12,12 @@
                     <span>{{ingredient.food | titlecase}}</span>
                     <!-- use observable to track input change? -->
                     <input class="quantity" id="quantity-{{i}}" [(ngModel)]="ingredient.quantity"/>
-                    <select [(ngModel)]="ingredient.measure">
-                        <!-- Populate 'selected' option if its the same as recipe default -->
-                        <!-- <span *ngIf="meas.name === ingredient.measure">
-                            <option *ngFor="let meas of conversionsArr" 
-                                value="{{meas.name}}" selected>
-                                {{meas.name}}
-                            </option>
-                        </span> -->
-                        <!-- Populate not-selected option if its the same as recipe default -->
-                        <!-- <span *ngIf="meas.name !== ingredient.measure"> -->
+                    <select [(ngModel)]="ingredient.measure" (change)="onMeasurementChanged(ingredient)">
+                        
                             <option *ngFor="let meas of conversionsArr"
                                 value="{{meas.name}}">
                                 {{meas.name}}
                             </option>
-                        <!-- </span> -->
                     </select>
                     <div class="full-text">{{ingredient.text}}</div>
                 </li>

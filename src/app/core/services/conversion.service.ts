@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Recipe } from 'src/app/types/recipe';
+import { Ingredient } from 'src/app/types/ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ConversionService {
     teaspoon: { name: 'teaspoon', base: 1, drops: this.oneHundred, tablespoon: 0.3333, cup: 0.0208,
       aliases: ['teaspoon', 'tsp']
     },
-    tablespoon: { name: 'tablespoon', base: 1, drops: 300, teaspoon: 3, cup: 0.0625,
+    tablespoon: { name: 'tablespoon', base: 1, drops: 3 * this.oneHundred, teaspoon: 3, cup: 0.0625,
       aliases: ['tablespoon']
     },
     cup: { name: 'cup', base: 1, drops: 4800, teaspoon: 48, tablespoon: 16,
@@ -30,7 +31,7 @@ export class ConversionService {
   getFloatFromTextFraction (text: string) {
     const [textFraction = null] = /[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
     const [dividend = null, divisor = null] = textFraction && textFraction.split('/') || [];
-    return parseInt(dividend)/parseInt(divisor);
+    return parseInt(dividend) / parseInt(divisor);
   }
 
   toNumber(text: string): number {
@@ -48,13 +49,20 @@ export class ConversionService {
     }
   }
 
+  convertMeasurement ( ingredient: Ingredient ) {
+    const multiplier = this.conversions[ ingredient.prevMeasure ][ ingredient.measure ];
+    ingredient.quantity =  Math.round((multiplier * ingredient.quantity) * this.oneHundred) / this.oneHundred;
+
+    ingredient.prevMeasure = ingredient.measure;
+    ingredient.prevQuantity = ingredient.quantity;
+  }
+
   addMeasurement(measurementName: string): object {
     this.conversions[measurementName] = {
       name: measurementName,
       base: 1,
       aliases: [measurementName]
     };
-
     return this.conversions;
   }
 

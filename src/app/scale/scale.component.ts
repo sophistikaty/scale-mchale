@@ -8,6 +8,7 @@ import { Recipe } from '../types/recipe';
 import { ConversionService } from '../core/services/conversion.service';
 import { RecipeService } from '../core/services/recipe.service';
 import { NutritionService } from '../core/services/nutrition.service';
+import { Ingredient } from '../types/ingredient';
 
 @Component({
   selector: 'app-scale',
@@ -17,12 +18,6 @@ import { NutritionService } from '../core/services/nutrition.service';
 
 export class ScaleComponent implements OnInit {
 @Input() selectedRecipe: Recipe;
-// selectedRecipe: Recipe;
-
- scale: Scale = {
-   id: 2,
-   name: 'juicy pears'
- };
 
  conversions: object;
  conversionsArr: Array<object>;
@@ -38,16 +33,6 @@ export class ScaleComponent implements OnInit {
   this.conversionsArr = Object.keys(this.conversions).map(function(measName: string) {
     return component.conversions[measName];
   });
-}
-
-getRecipes(): void {
-  this.recipeService.getRecipes()
-    .subscribe(recipes => {
-      this.recipes = recipes;
-      this.selectedRecipe =  this.selectedRecipe || recipes.pop();
-      console.log('selected recipe in scale ', this.selectedRecipe);
-      this.initQuantityObservers();
-    });
 }
 
 getIndexFromEvent(e: Event): number {
@@ -70,6 +55,20 @@ private initQuantityObservers() {
   .pipe(debounceTime(500), distinctUntilChanged(),
     map((e) => this.onQuantityChanged(e)))
   .subscribe();
+}
+
+onMeasurementChanged(ingredient: Ingredient) {
+  this.conversionService.convertMeasurement(ingredient);
+}
+
+getRecipes(): void {
+  this.recipeService.getRecipes()
+    .subscribe(recipes => {
+      this.recipes = recipes;
+      this.selectedRecipe =  this.selectedRecipe || recipes.pop();
+      console.log('selected recipe in scale ', this.selectedRecipe);
+      this.initQuantityObservers();
+    });
 }
 
   constructor(private conversionService: ConversionService,

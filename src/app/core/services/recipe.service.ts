@@ -74,7 +74,8 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   addIngredientMeasurement(ingredientText: string, quantity: number): string {
-    const textWithoutQuantity = ingredientText.slice(ingredientText.indexOf(quantity.toString())+1);
+    const [ fullTextQuantity = null ] = /([[1-9][0-9]*\s*]?)[1-9][0-9]*\/[1-9][0-9]*/g.exec(ingredientText) || [];
+    const textWithoutQuantity = ingredientText.slice(ingredientText.indexOf(fullTextQuantity) + fullTextQuantity.length);
     const measurementName = textWithoutQuantity.split(' ').find(function(term) {
       return term !== '';
     });

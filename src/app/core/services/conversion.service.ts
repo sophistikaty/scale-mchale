@@ -10,17 +10,17 @@ export class ConversionService {
   oneHundred =  100;
 
   conversions: object = {
-    drops: { name: 'drops', base: 1, teaspoon: 0.01, tablespoon: 0.0033, cup: 0.0002,
-      aliases: ['drops']
+    drop: { name: 'drop', base: 1, teaspoon: 0.01, tablespoon: 0.0033, cup: 0.0002,
+      aliases: ['drop', 'drops']
     },
-    teaspoon: { name: 'teaspoon', base: 1, drops: this.oneHundred, tablespoon: 0.3333, cup: 0.0208,
-      aliases: ['teaspoon', 'tsp']
+    teaspoon: { name: 'teaspoon', base: 1, drop: this.oneHundred, tablespoon: 0.3333, cup: 0.0208,
+      aliases: ['teaspoon', 'teaspoons', 'tsp', 'tsps']
     },
-    tablespoon: { name: 'tablespoon', base: 1, drops: 3 * this.oneHundred, teaspoon: 3, cup: 0.0625,
-      aliases: ['tablespoon']
+    tablespoon: { name: 'tablespoon', base: 1, drop: 3 * this.oneHundred, teaspoon: 3, cup: 0.0625,
+      aliases: ['tablespoon', 'tablespoons', 'tbsp', 'tbsps']
     },
-    cup: { name: 'cup', base: 1, drops: 4800, teaspoon: 48, tablespoon: 16,
-      aliases: ['cup']
+    cup: { name: 'cup', base: 1, drop: 4800, teaspoon: 48, tablespoon: 16,
+      aliases: ['cup', 'cups']
     }
   };
 
@@ -69,11 +69,11 @@ export class ConversionService {
     ingredient.prevQuantity = ingredient.quantity;
   }
 
-  addMeasurement(measurementName: string): object {
-    this.conversions[measurementName] = {
-      name: measurementName,
+  addMeasurement(name: string): object {
+    this.conversions[name] = {
+      name,
       base: 1,
-      aliases: [measurementName]
+      aliases: [name, `${name}s`]
     };
     return this.conversions;
   }

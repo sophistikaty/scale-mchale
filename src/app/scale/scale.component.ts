@@ -66,6 +66,8 @@ getRecipes(): void {
     .subscribe(recipes => {
       this.recipes = recipes;
       this.selectedRecipe =  this.selectedRecipe || recipes.pop();
+      const testIngredient = this.selectedRecipe.ingredients[0];
+      const testParsed = this.recipeService.textToIngredients( [testIngredient.originalText] );
       this.initQuantityObservers();
     });
 }

@@ -73,12 +73,18 @@ private handleError<T> (operation = 'operation', result?: T) {
     return this.conversionService.toNumber(text);
   }
 
+  cleanSingular(term: string): string {
+    const sIndex = term.indexOf('s');
+    const isPlural = sIndex === term.length - 1;
+    return isPlural ? term.slice(0, sIndex) : term;
+  }
+
   addIngredientMeasurement(ingredientText: string, quantity: number): string {
-    const [ fullTextQuantity = null ] = /([[1-9][0-9]*\s*]?)[1-9][0-9]*\/[1-9][0-9]*/g.exec(ingredientText) || [];
+    const [ fullTextQuantity = '' ] = /([[1-9][0-9]*\s*]?)[1-9][0-9]*\/[1-9][0-9]*/g.exec(ingredientText) || [];
     const textWithoutQuantity = ingredientText.slice(ingredientText.indexOf(fullTextQuantity) + fullTextQuantity.length);
-    const measurementName = textWithoutQuantity.split(' ').find(function(term) {
+    const measurementName = this.cleanSingular(textWithoutQuantity.split(' ').find(function(term) {
       return term !== '';
-    });
+    }));
     // need a measurement conversion generator service?
     this.conversionService.addMeasurement(measurementName);
     return measurementName;

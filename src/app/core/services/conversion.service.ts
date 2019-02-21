@@ -33,7 +33,6 @@ export class ConversionService {
     const [ textInteger = null ] = /[[1-9][0-9]*\s*?]*/g.exec(text) || [];
     // [1-9][0-9]*\/[1-9][0-9]* fraction
     const [ textFraction = null ] = /[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
-    const [ numberMatch = null ] = /([[1-9][0-9]*\s*]?)[1-9][0-9]*\/[1-9][0-9]*/g.exec(text) || [];
 
     if ( !textFraction ) {
       return parseInt(textInteger);

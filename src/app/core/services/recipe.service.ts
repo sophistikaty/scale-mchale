@@ -129,7 +129,8 @@ private handleError<T> (operation = 'operation', result?: T) {
     const measureCleaned = this.removeSubstr(ingredientText, measure);
     const secondaryQuantity = this.textQuantity(measureCleaned);
     const secondaryMeas = secondaryQuantity !== '' && this.getIngredientMeasure(measureCleaned);
-    const secondaryQMCleaned = this.removeSubstr(this.removeSubstr(measureCleaned, secondaryQuantity), secondaryMeas);
+    const secondaryQMCleaned = !secondaryMeas ? measureCleaned :
+      this.removeSubstr(this.removeSubstr(measureCleaned, secondaryQuantity), secondaryMeas);
     return this.cleanExtraChars(secondaryQMCleaned);
   }
 
@@ -143,13 +144,18 @@ private handleError<T> (operation = 'operation', result?: T) {
     });
   }
 
+  updateSavedRecipes( library: object ) {
+    sessionStorage.setItem('recipes', JSON.stringify(library));
+  }
+
   mapToRecipes (data) {
     const service = this;
     const { hits = [] } = data;
     return hits.map(function(hit, index: number) {
-      const { label, ingredientLines, image } = hit && hit.recipe;
+      const { label, ingredientLines, image, uri, url, shareAs } = hit && hit.recipe;
+      const id = uri || url || shareAs || image;
       const ingredients = service.textToIngredients(ingredientLines);
-      return new Recipe(index, label, ingredients, image);
+      return new Recipe(id, label, ingredients, image);
     });
   }
 

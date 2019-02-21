@@ -14,15 +14,11 @@ export class RecipeSearchComponent implements OnInit {
 
   public searchResults: Recipe[];
 
-  updateSavedRecipes( library: object ) {
-    sessionStorage.setItem('recipes', JSON.stringify(library));
-  }
-
   addToMyRecipes( recipe: Recipe, index: number ) {
     const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
     recipeLib[recipe.id] = recipe;
     // how to update other views with updated library? probably observable
-    this.updateSavedRecipes(recipeLib);
+    this.recipeService.updateSavedRecipes(recipeLib);
   }
 
   onSearch() {

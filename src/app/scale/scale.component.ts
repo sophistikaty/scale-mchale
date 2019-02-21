@@ -48,7 +48,7 @@ onQuantityChanged( e: Event) {
 
 private initQuantityObservers() {
   const quantityInputs = document.querySelectorAll('input.quantity');
-  if (!quantityInputs) {
+  if (!quantityInputs || !quantityInputs.length) {
     return;
   }
   fromEvent(quantityInputs, 'keyup')
@@ -66,8 +66,6 @@ getRecipes(): void {
     .subscribe(recipes => {
       this.recipes = recipes;
       this.selectedRecipe =  this.selectedRecipe || recipes.pop();
-      const testIngredient = this.selectedRecipe.ingredients[0];
-      const testParsed = this.recipeService.textToIngredients( [testIngredient.originalText] );
       this.initQuantityObservers();
     });
 }

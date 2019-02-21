@@ -2,12 +2,12 @@ import { Ingredient } from './ingredient';
 
 export class Recipe {
 
-  id: number;
+  id: string;
   name: string;
   ingredients: Ingredient[];
   imageUrl: string;
 
-  constructor(id: number = null,
+  constructor(id: string = 'blankId',
               name: string = 'blankName',
               ingredients: Ingredient[] = [],
               imageUrl: string = 'noImage') {

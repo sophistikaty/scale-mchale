@@ -1,4 +1,5 @@
 <div>
+    <h3>scale</h3>
     <div *ngIf="selectedRecipe">
         <h2>{{selectedRecipe.name}} </h2>
         <div>
@@ -19,4 +20,5 @@
             </ul>
         </div>
     </div>
+    <p *ngIf="!selectedRecipe">☝🏼</p>   
 </div>

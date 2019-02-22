@@ -1,14 +1,13 @@
 <div>
-  <label>search for a recipe
-    <input [(ngModel)]="searchInput"
+  <h3>search</h3>
+  <input [(ngModel)]="searchInput"
     id="recipeSearch"
     placeholder="what sounds good?">
-  </label>
 <ul>
   <li *ngFor="let result of searchResults">
     <div class="recipe">
       {{result.name}}
-      <button (click)="addToMyRecipes(result, index)">
+      <button (click)="addToMyRecipes(result)">
         add
       </button>
       <img src="{{result.imageUrl}}" alt="{{result.name}}"/>

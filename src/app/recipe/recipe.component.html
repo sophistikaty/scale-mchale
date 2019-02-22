@@ -1,5 +1,5 @@
-<h2 *ngIf="hasRecipes">cardbox</h2>
-    <ul>
+<h3>cardbox</h3>
+    <ul *ngIf="hasRecipes">
         <li *ngFor="let recipe of myRecipes | keyvalue">
             <div class ="recipeImage"><img src="{{recipe.value.imageUrl}}"></div>
             <a routerLink="/detail/{{recipe.value.id}}">
@@ -8,4 +8,5 @@
             <button (click)="selectRecipe(recipe.value)">select</button>
             <button (click)="deleteRecipe(recipe.value)">delete</button>
         </li>
-    </ul> 
+    </ul>
+    <p *ngIf="!hasRecipes">Nothing to see here. Search for deliciousness to add to your stash.☝🏼</p> 

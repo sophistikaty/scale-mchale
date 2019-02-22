@@ -166,6 +166,13 @@ private handleError<T> (operation = 'operation', result?: T) {
     });
   }
 
+  addRecipe(recipe: Recipe){
+    const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
+    recipeLib[recipe.id] = recipe;
+    // how to update other views with updated library? probably observable
+    this.updateSavedRecipes(recipeLib);
+  }
+
   searchRecipes(searchInput: string) {
     const edamam = 'https://api.edamam.com/search';
     const accessConfig = `&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`;

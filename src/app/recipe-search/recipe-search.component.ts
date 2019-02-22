@@ -14,11 +14,8 @@ export class RecipeSearchComponent implements OnInit {
 
   public searchResults: Recipe[];
 
-  addToMyRecipes( recipe: Recipe, index: number ) {
-    const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
-    recipeLib[recipe.id] = recipe;
-    // how to update other views with updated library? probably observable
-    this.recipeService.updateSavedRecipes(recipeLib);
+  addToMyRecipes( recipe: Recipe ) {
+    this.recipeService.addRecipe(recipe);
   }
 
   onSearch() {

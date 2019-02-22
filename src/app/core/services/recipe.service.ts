@@ -208,10 +208,9 @@ private handleError<T> (operation = 'operation', result?: T) {
     return this.selectedRecipe;
   }
 
-  private recipeSubscriber(observer: Observer<Recipe>, setup) {
+  private recipeSubscriber(observer: Observer<Recipe>) {
       console.log('new observer for observable ', observer);
       console.log('this  ', this);
-      console.log('setup ', setup);
       // Get the next and error callbacks. These will be passed in when
       // the consumer subscribes.
       const {next, error} = observer;

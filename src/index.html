@@ -1,100 +1,14 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <title>ScaleMchale</title>
+  <base href="/">
 
-  <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link href='http://fonts.googleapis.com/css?family=Droid+Serif:700,700italic|Roboto:400,500,900|Oswald:400,700' rel='stylesheet' type='text/css'>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
-
-  <title>Scale McHale | Drool-worthy brainiac. Eat your heart out.</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
-
 <body>
-	<div id="mchaleWrap" ng-app="mchaleRecipes">		
-
-		<h1>Scale McHale</h1>
-		<h4>Drool-worthy brainiac. Eat your heart out.</h4>
-
-		<div ng-controller="mchaleCtrl as ctrl">
-
-			<input ng-model="ctrl.recipeSearchInput"					
-					placeholder="search for a recipe"></input> 
-			<button ng-click="ctrl.recipeSearch(ctrl.recipeSearchInput)"
-					type="button">GO</button>
-
-			<ul>
-				<li ng-click="ctrl.selectRecipe(hit.recipe)"
-					ng-repeat="hit in ctrl.searchResults"> 
-					<div ng-style='{"background-image":"url( {{hit.recipe.image}} )"}'
-						class='recipePreview'>
-						<div class='recipeInfo'>
-							{{hit.recipe.label}}
-							<i ng-click="ctrl.selectRecipe(hit.recipe)"
-								class="material-icons">remove_red_eye</i>
-							<i ng-click="ctrl.addToMyRecipes(hit.recipe, $index)"
-								class="material-icons">library_add</i>
-						<div>
-					</div>
-				</li>
-			</ul>
-
-			<h2 ng-if="ctrl.hasRecipes">{{ctrl.recipe.label}}</h2>
-			<div>
-				<i ng-click="ctrl.addToMyRecipes(ctrl.recipe)"
-					class="material-icons">library_add</i>
-			</div>
-
-			<ul ng-style="{'background':'transparent url(' + ctrl.recipe.image + ')'}"	
-				class="recipeDisplay">
-				<li ng-repeat="ingredient in ctrl.recipe.ingredients">
-						<span>{{ingredient.food}}</span>
-					<input ng-model="ingredient.quantity"
-							ng-change="ctrl.convertRecipe(ingredient)"/>
-					<select ng-model="ingredient.measure"
-							ng-change="ctrl.convertMeasurement(ingredient)">
-						<!-- Populate 'selected' option if its the same as recipe default -->
-						<option ng-repeat="meas in ctrl.conversions"
-						ng-if="meas.name === ingredient.measure"
-						value="{{meas.name}}" selected >{{meas.name}}</option>
-
-						<!-- Populate not-selected option if its the same as recipe default -->
-						<option ng-repeat="meas in ctrl.conversions"
-						ng-if="meas.name != ingredient.measure"
-						value="{{meas.name}}">{{meas.name}}</option>
-
-					</select>
-					<br>
-				</li>
-			</ul>
-
-			<h3 ng-if="ctrl.hasRecipes">MyRecipes</h3>
-			<ul>
-				<li ng-click="ctrl.selectRecipe(recipe)"
-					ng-repeat="recipe in ctrl.myRecipes"> 
-					<div ng-style='{"background-image":"url( {{recipe.image}} )"}'
-						class='recipePreview'>						
-
-						<div class='recipeInfo'>
-							{{recipe.label}}
-							<i ng-click="ctrl.selectRecipe(recipe)"
-								class="material-icons">remove_red_eye</i>
-							<i ng-click="ctrl.deleteRecipe(recipe)"
-								class="material-icons">delete</i>
-						<div>
-					</div>
-				</li>
-			</ul>
-		</div>
-
-	<script src="../dist/config.js"></script>
-	<script src="../dist/measureConvert.js"></script>
-	<script src="../dist/main.js"></script>
+  <app-root></app-root>
 </body>
 </html>

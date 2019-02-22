@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, Observer, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
@@ -19,10 +19,12 @@ const httpOptions = {
 
 export class RecipeService {
 
-  recipes: Recipe[];
   private apiKeys = this.appConfig.config.apiKeys;
   private recipesUrl = 'api/recipe';
-  private selectedRecipe: Recipe;
+
+  recipes: Recipe[];
+  recipes$: Observable<Recipe>;
+  selectedRecipe: Recipe;
 
   /**
  * Handle Http operation that failed.
@@ -206,9 +208,29 @@ private handleError<T> (operation = 'operation', result?: T) {
     return this.selectedRecipe;
   }
 
+  private recipeSubscriber(observer: Observer<Recipe>, setup) {
+      console.log('new observer for observable ', observer);
+      console.log('this  ', this);
+      console.log('setup ', setup);
+      // Get the next and error callbacks. These will be passed in when
+      // the consumer subscribes.
+      const {next, error} = observer;
+
+      // let watchId;
+      // Simple geolocation API check provides values to publish
+      // if ('geolocation' in navigator) {
+      //   watchId = navigator.geolocation.watchPosition(next, error);
+      // } else {
+      //   error('Geolocation not available');
+      // }
+      return { unsubscribe() {} };
+  }
+
   constructor(private appConfig: AppConfig,
     private http: HttpClient,
     private nutritionService: NutritionService,
     private conversionService: ConversionService) {
+
+      this.recipes$ = new Observable(this.recipeSubscriber);
   }
 }

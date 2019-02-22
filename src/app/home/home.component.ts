@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../types/recipe';
 import { RecipeService } from '../core/services/recipe.service';
+import { Observer } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,7 @@ import { RecipeService } from '../core/services/recipe.service';
 export class HomeComponent implements OnInit {
 
   recipe: Recipe;
+  myRecipes$: Observer<Recipe>;
 
   getRecipe(id?: number): void {
     if (!id) {
@@ -27,8 +29,13 @@ export class HomeComponent implements OnInit {
   constructor(private recipeService: RecipeService) { }
 
   ngOnInit() {
-    // this.getRecipe();
     this.recipe = this.recipeService.getSelectedRecipe();
-  }
+    this.myRecipes$ = {
+      next: x => console.log('Observer got a next value: ' + x),
+      error: err => console.error('Observer got an error: ' + err),
+      complete: () => console.log('Observer got a complete notification'),
+    };
 
+    this.recipeService.recipes$.subscribe(this.myRecipes$);
+  }
 }

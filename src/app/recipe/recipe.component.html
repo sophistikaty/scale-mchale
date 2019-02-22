@@ -1,8 +1,9 @@
 <h2 *ngIf="hasRecipes">cardbox</h2>
     <ul>
         <li *ngFor="let recipe of myRecipes | keyvalue">
+            <div class ="recipeImage"><img src="{{recipe.value.imageUrl}}"></div>
             <a routerLink="/detail/{{recipe.value.id}}">
-                <span class="delicious">{{recipe.value.id}}</span> {{recipe.value.name}} 
+                <span class="delicious">{{recipe.value.name}}</span>  
             </a>
             <button (click)="selectRecipe(recipe.value)">select</button>
             <button (click)="deleteRecipe(recipe.value)">delete</button>

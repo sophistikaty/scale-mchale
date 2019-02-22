@@ -78,7 +78,7 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   removeSubstr(fullString: string, substring: string): string {
-    return fullString.split(substring).reverse().find(this.notBlank);
+    return substring === '' ? fullString : fullString.split(substring).reverse().find(this.notBlank);
   }
 
   textQuantity(text: string): string {
@@ -116,13 +116,20 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   getIngredientMeasure (ingredientText: string): string {
+    let measurement: string;
     const measureConvert = this.conversionService.getConversions();
     const existingMeasurement = Object.keys(measureConvert).find(function(measurement) {
     return measureConvert[measurement].aliases.find(function(alias) {
       return ingredientText.indexOf(alias) !== -1;
       });
     });
-    return existingMeasurement ? existingMeasurement : this.addIngredientMeasurement(ingredientText);
+
+    if(existingMeasurement){
+      measurement = existingMeasurement;
+    } else {
+      measurement = ingredientText.indexOf('of') ? this.textQuantity(ingredientText) : this.addIngredientMeasurement(ingredientText);
+    }
+    return measurement;
   }
 
   getIngredientFood (ingredientText: string, measure: string) {

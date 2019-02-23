@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Observer, of } from 'rxjs';
+import { Observable, Observer, BehaviorSubject, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
@@ -23,8 +23,10 @@ export class RecipeService {
   private recipesUrl = 'api/recipe';
 
   recipes: Recipe[];
-  recipes$: Observable<Recipe>;
+  recipes$ = new BehaviorSubject<Recipe>(this.getSelectedRecipe());
   selectedRecipe: Recipe;
+
+  cast = this.recipes$.asObservable();
 
   /**
  * Handle Http operation that failed.
@@ -224,12 +226,13 @@ private handleError<T> (operation = 'operation', result?: T) {
       // }
       return { unsubscribe() {} };
   }
+  
+  tryNewRecipe(newRecipe: Recipe){
+    this.recipes$.next(newRecipe);
+  }
 
   constructor(private appConfig: AppConfig,
     private http: HttpClient,
     private nutritionService: NutritionService,
-    private conversionService: ConversionService) {
-
-      this.recipes$ = new Observable(this.recipeSubscriber);
-  }
+    private conversionService: ConversionService) {}
 }

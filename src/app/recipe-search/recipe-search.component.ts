@@ -15,7 +15,8 @@ export class RecipeSearchComponent implements OnInit {
   public searchResults: Recipe[];
 
   addToMyRecipes( recipe: Recipe ) {
-    this.recipeService.addRecipe(recipe);
+    // this.recipeService.addRecipe(recipe);
+    this.recipeService.tryNewRecipe(recipe);
   }
 
   onSearch() {

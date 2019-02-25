@@ -23,10 +23,12 @@ export class RecipeService {
   private recipesUrl = 'api/recipe';
 
   recipes: Recipe[];
-  recipes$ = new BehaviorSubject<Recipe>(this.getSelectedRecipe());
-  selectedRecipe: Recipe;
+  recipes$;
 
-  cast = this.recipes$.asObservable();
+  cast;
+
+  selectedRecipe: Recipe;
+  selectedRecipe$;
 
   /**
  * Handle Http operation that failed.
@@ -155,10 +157,6 @@ private handleError<T> (operation = 'operation', result?: T) {
     });
   }
 
-  updateSavedRecipes( library: object ) {
-    sessionStorage.setItem('recipes', JSON.stringify(library));
-  }
-
   mapToRecipes (data) {
     const service = this;
     const { hits = [] } = data;
@@ -170,10 +168,32 @@ private handleError<T> (operation = 'operation', result?: T) {
     });
   }
 
+  updateSavedRecipes( library: object ) {
+    sessionStorage.setItem('recipes', JSON.stringify(library));
+    this.recipes$.next(this.getLocalStorageRecipeArr(library));
+
+    if (this.selectedRecipe && this.recipes.indexOf(this.selectedRecipe)) {
+      return;
+    }
+    this.selectedRecipe$.next(this.recipes.pop());
+  }
+
+  getLocalStorageRecipes(): object {
+    return JSON.parse(sessionStorage.getItem('recipes')) || {};
+  }
+
+  getLocalStorageRecipeArr(recipesIn ?: object): Recipe[] {
+    const recipeLib = recipesIn || this.getLocalStorageRecipes();
+    return Object.keys(recipeLib).map(function(recipeId: string): Recipe {
+      const localRecipe = recipeLib[recipeId];
+      localRecipe.ingredients = localRecipe.ingredients as Ingredient[];
+      return localRecipe as Recipe;
+    });
+  }
+
   addRecipe(recipe: Recipe){
-    const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
+    const recipeLib = this.getLocalStorageRecipes();
     recipeLib[recipe.id] = recipe;
-    // how to update other views with updated library? probably observable
     this.updateSavedRecipes(recipeLib);
   }
 
@@ -183,15 +203,6 @@ private handleError<T> (operation = 'operation', result?: T) {
     const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
 
     return this.http.get(edamamReqUrl);
-  }
-
-  getLocalStorageRecipeArr(): Recipe[] {
-    const recipeLib: object = JSON.parse(sessionStorage.getItem('recipes')) || {};
-    return Object.keys(recipeLib).map(function(recipeId: string): Recipe {
-      const localRecipe = recipeLib[recipeId];
-      localRecipe.ingredients = localRecipe.ingredients as Ingredient[];
-      return localRecipe as Recipe;
-    });
   }
 
   setupLocalDefault() {
@@ -213,26 +224,18 @@ private handleError<T> (operation = 'operation', result?: T) {
   private recipeSubscriber(observer: Observer<Recipe>) {
       console.log('new observer for observable ', observer);
       console.log('this  ', this);
-      // Get the next and error callbacks. These will be passed in when
-      // the consumer subscribes.
       const {next, error} = observer;
-
-      // let watchId;
-      // Simple geolocation API check provides values to publish
-      // if ('geolocation' in navigator) {
-      //   watchId = navigator.geolocation.watchPosition(next, error);
-      // } else {
-      //   error('Geolocation not available');
-      // }
       return { unsubscribe() {} };
-  }
-  
-  tryNewRecipe(newRecipe: Recipe){
-    this.recipes$.next(newRecipe);
   }
 
   constructor(private appConfig: AppConfig,
     private http: HttpClient,
     private nutritionService: NutritionService,
-    private conversionService: ConversionService) {}
+    private conversionService: ConversionService) {
+      this.recipes$ = new BehaviorSubject<Recipe[]>(this.getLocalStorageRecipeArr());
+      this.cast = this.recipes$.asObservable();
+
+      this.selectedRecipe$ = new BehaviorSubject<Recipe>(this.getSelectedRecipe());
+      this.cast = this.selectedRecipe$.asObservable();
+    }
 }

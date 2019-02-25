@@ -10,32 +10,36 @@ import { Observer } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  recipe: Recipe;
-  myRecipes$: Observer<Recipe>;
+  selectedRecipe: Recipe;
+  myRecipes: Recipe[];
+  hasRecipes: boolean;
 
-  getRecipe(id?: number): void {
-    if (!id) {
-      this.recipeService.getRecipes()
-      .subscribe(recipes => {
-        this.recipe = recipes.pop();
-        console.log('home recipe ', this.recipe);
-      });
-      return;
-    }
-    this.recipeService.getRecipe(id)
-    .subscribe(recipe => this.recipe = recipe);
+  updateSelectedRecipe(recipe:Recipe) {
+    this.selectedRecipe = recipe;
   }
+
+  cardboxUpdated(recipeArr: Recipe[]) {
+    this.myRecipes = recipeArr;
+    this.hasRecipes = Object.keys(this.myRecipes).length > 0;
+  }
+
+  myRecipes$: Observer<Recipe[]> = {
+    next: recipeArr => this.cardboxUpdated(recipeArr),
+    error: err => console.error('Observer got an error: ' + err),
+    complete: () => console.log('Observer got a complete notification'),
+  };
+
+  selectedRecipe$: Observer<Recipe> = {
+    next: recipe => this.updateSelectedRecipe(recipe),
+    error: err => console.error('Observer got an error: ' + err),
+    complete: () => console.log('Observer got a complete notification'),
+  };
 
   constructor(private recipeService: RecipeService) { }
 
   ngOnInit() {
-    this.recipe = this.recipeService.getSelectedRecipe();
-    this.myRecipes$ = {
-      next: x => console.log('Observer got a next value: ' + x),
-      error: err => console.error('Observer got an error: ' + err),
-      complete: () => console.log('Observer got a complete notification'),
-    };
 
     this.recipeService.recipes$.subscribe(this.myRecipes$);
+    this.recipeService.selectedRecipe$.subscribe(this.selectedRecipe$);
   }
 }

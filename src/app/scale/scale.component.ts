@@ -61,23 +61,13 @@ onMeasurementChanged(ingredient: Ingredient) {
   this.conversionService.convertMeasurement(ingredient);
 }
 
-getRecipes(): void {
-  this.recipeService.getRecipes()
-    .subscribe(recipes => {
-      this.recipes = recipes;
-      this.selectedRecipe =  this.selectedRecipe || recipes.pop();
-      this.initQuantityObservers();
-    });
-}
-
   constructor(private conversionService: ConversionService,
               private recipeService: RecipeService,
               public nutritionService: NutritionService) { }
 
   ngOnInit() {
     this.getConversions();
-    this.getRecipes();
+    this.initQuantityObservers();
     console.log('nutrition info', this.nutritionService.nutriitonInfo);
   }
-
 }

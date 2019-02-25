@@ -7,7 +7,6 @@
             <ul class ="recipeDisplay">
                 <li *ngFor="let ingredient of selectedRecipe.ingredients; index as i;">
                     <span>{{ingredient.food | titlecase}}</span>
-                    <!-- use observable to track input change? -->
                     <input class="quantity" id="quantity-{{i}}" [(ngModel)]="ingredient.quantity"/>
                     <select [(ngModel)]="ingredient.measure" (change)="onMeasurementChanged(ingredient)">
                         <option *ngFor="let meas of conversionsArr"

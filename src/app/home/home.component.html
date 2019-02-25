@@ -3,8 +3,7 @@
   <hr>
   <app-recipe-search></app-recipe-search>
   <hr>
-  <app-scale
-  [selectedRecipe]="recipe"></app-scale>
+  <app-scale [selectedRecipe]="selectedRecipe"></app-scale>
   <hr>
-  <app-recipe></app-recipe>
+  <app-recipe [myRecipes]="myRecipes" [hasRecipes]="hasRecipes"></app-recipe>
 </div>

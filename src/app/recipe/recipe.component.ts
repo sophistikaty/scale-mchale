@@ -17,9 +17,7 @@ export class RecipeComponent implements OnInit {
   }
 
   deleteRecipe(recipe: Recipe){
-    const recipeLib = JSON.parse(sessionStorage.getItem('recipes')) || {};
-    delete recipeLib[recipe.id];
-    this.recipeService.updateSavedRecipes(recipeLib);
+    this.recipeService.deleteRecipe(recipe);
   }
 
   constructor(private recipeService: RecipeService) { }

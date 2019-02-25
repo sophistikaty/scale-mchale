@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Observer, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
@@ -168,14 +168,25 @@ private handleError<T> (operation = 'operation', result?: T) {
     });
   }
 
+  deleteRecipe(recipe:Recipe) {
+    const recipeLib = this.getLocalStorageRecipes();
+    delete recipeLib[recipe.id];
+    this.updateSavedRecipes(recipeLib);
+  }
+
   updateSavedRecipes( library: object ) {
     sessionStorage.setItem('recipes', JSON.stringify(library));
-    this.recipes$.next(this.getLocalStorageRecipeArr(library));
+    const recipeArr = this.getLocalStorageRecipeArr(library);
 
-    if (this.selectedRecipe && this.recipes.indexOf(this.selectedRecipe)) {
+    this.recipes$.next(recipeArr);
+
+    const selectedRecipe = this.selectedRecipe$.getValue();
+    const hasSelectedRecipe = selectedRecipe && recipeArr.find(recipe => recipe.id === selectedRecipe.id);
+
+    if (hasSelectedRecipe) {
       return;
     }
-    this.selectedRecipe$.next(this.recipes.pop());
+    this.setSelectedRecipe(recipeArr.pop());
   }
 
   getLocalStorageRecipes(): object {
@@ -211,7 +222,7 @@ private handleError<T> (operation = 'operation', result?: T) {
   }
 
   setSelectedRecipe(recipe: Recipe): void {
-    this.selectedRecipe = recipe;
+    this.selectedRecipe$.next(recipe);
   }
 
   getSelectedRecipe(): Recipe {
@@ -219,13 +230,6 @@ private handleError<T> (operation = 'operation', result?: T) {
       this.setupLocalDefault();
     }
     return this.selectedRecipe;
-  }
-
-  private recipeSubscriber(observer: Observer<Recipe>) {
-      console.log('new observer for observable ', observer);
-      console.log('this  ', this);
-      const {next, error} = observer;
-      return { unsubscribe() {} };
   }
 
   constructor(private appConfig: AppConfig,

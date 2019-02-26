@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+// import { Observable } from 'rxjs';
 
 import { Recipe } from '../types/recipe';
 import { RecipeService } from '../core/services/recipe.service';
@@ -11,21 +12,27 @@ import { RecipeService } from '../core/services/recipe.service';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
+  // recipe$: Observable<Recipe>;
   recipe: Recipe;
 
+  updateVal(val) {
+    console.log('val', val);
+    this.recipe = val;
+  }
+
   getRecipe(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
+    const id: string = this.route.snapshot.paramMap.get('id');
     this.recipeService.getRecipe(id)
-      .subscribe(recipe => this.recipe = recipe);
+    .subscribe(this.updateVal);
   }
 
   goBack(): void {
     this.location.back();
   }
 
-  save(): void {
-    this.recipeService.updateRecipe(this.recipe)
-      .subscribe(() => this.goBack());
+  save(recipe: Recipe): void {
+    this.recipeService.updateRecipe(recipe);
+      // .subscribe(() => this.goBack());
   }
 
   constructor(private route: ActivatedRoute,
@@ -34,7 +41,6 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit() {
     this.getRecipe();
-    console.log('recipe', this.recipe);
   }
 
 }

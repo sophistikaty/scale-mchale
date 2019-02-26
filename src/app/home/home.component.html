@@ -3,7 +3,7 @@
   <hr>
   <app-recipe-search></app-recipe-search>
   <hr>
-  <app-scale [selectedRecipe]="selectedRecipe"></app-scale>
+  <app-scale [selectedRecipe]="recipeService.selectedRecipe$ | async"></app-scale>
   <hr>
-  <app-recipe [myRecipes]="myRecipes" [hasRecipes]="hasRecipes"></app-recipe>
+  <app-recipe [myRecipes]="recipeService.recipes$ | async" [hasRecipes]="hasRecipes"></app-recipe>
 </div>

@@ -10,27 +10,14 @@ import { Observer } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  selectedRecipe: Recipe;
-  myRecipes: Recipe[];
   hasRecipes: boolean;
 
-  updateSelectedRecipe(recipe:Recipe) {
-    this.selectedRecipe = recipe;
-  }
-
   cardboxUpdated(recipeArr: Recipe[]) {
-    this.myRecipes = recipeArr;
-    this.hasRecipes = Object.keys(this.myRecipes).length > 0;
+    this.hasRecipes = Object.keys(recipeArr).length > 0;
   }
 
   myRecipes$: Observer<Recipe[]> = {
     next: recipeArr => this.cardboxUpdated(recipeArr),
-    error: err => console.error('Observer got an error: ' + err),
-    complete: () => console.log('Observer got a complete notification'),
-  };
-
-  selectedRecipe$: Observer<Recipe> = {
-    next: recipe => this.updateSelectedRecipe(recipe),
     error: err => console.error('Observer got an error: ' + err),
     complete: () => console.log('Observer got a complete notification'),
   };
@@ -40,6 +27,6 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
 
     this.recipeService.recipes$.subscribe(this.myRecipes$);
-    this.recipeService.selectedRecipe$.subscribe(this.selectedRecipe$);
+    this.recipeService.selectedRecipe$;
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+// import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
@@ -22,13 +22,9 @@ export class RecipeService {
   private apiKeys = this.appConfig.config.apiKeys;
   private recipesUrl = 'api/recipe';
 
-  recipes: Recipe[];
   recipes$;
-
-  cast;
-
-  selectedRecipe: Recipe;
   selectedRecipe$;
+  cast;
 
   /**
  * Handle Http operation that failed.
@@ -50,30 +46,24 @@ private handleError<T> (operation = 'operation', result?: T) {
   };
 }
 
-   getRecipe(id: number): Observable<Recipe> {
-    const url = `${this.recipesUrl}/${id}`;
-    return this.http.get<Recipe>(url).pipe(
-      tap(_ => console.log(`fetched recipe id=${id}`, _)),
-      catchError(this.handleError<Recipe>(`getRecipe id=${id}`))
-    );
+  // getRecipes(): Observable<Recipe[]> {
+  //   console.log('adding recipe');
+  //   this.nutritionService.add('mock nutrition from recipe');
+  //   return this.http.get<Recipe[]>(this.recipesUrl)
+  //     .pipe(
+  //       tap(_ => console.log('fetched recipes', _)),
+  //       catchError(this.handleError('getRecipes', []))
+  //     );
+  // }
+
+  updateRecipe (recipe: Recipe) {
+  //   return this.http.put(this.recipesUrl, recipe, httpOptions).pipe(
+  //     tap(_ => console.log(`updated recipe id=${recipe.id}`, _)),
+  //     catchError(this.handleError<any>('updateRecipe'))
+  //   );
   }
 
-  getRecipes(): Observable<Recipe[]> {
-    console.log('adding recipe');
-    this.nutritionService.add('mock nutrition from recipe');
-    return this.http.get<Recipe[]>(this.recipesUrl)
-      .pipe(
-        tap(_ => console.log('fetched recipes', _)),
-        catchError(this.handleError('getRecipes', []))
-      );
-  }
-
-  updateRecipe (recipe: Recipe): Observable<any> {
-    return this.http.put(this.recipesUrl, recipe, httpOptions).pipe(
-      tap(_ => console.log(`updated recipe id=${recipe.id}`, _)),
-      catchError(this.handleError<any>('updateRecipe'))
-    );
-  }
+ //ingestion / parsing
 
   getIngredientQuantity (text: string): number {
     return this.conversionService.toNumber(text);
@@ -157,15 +147,41 @@ private handleError<T> (operation = 'operation', result?: T) {
     });
   }
 
+  getRecipeId(dataHit) {
+    const { image, uri, url, shareAs } = dataHit;
+    const uniqueUrl = uri || url || shareAs || image;
+    const id = /(\w*)$/.exec(uniqueUrl).pop();
+    return id;
+  }
+
+  //search
+
+  searchRecipes(searchInput: string) {
+    const edamam = 'https://api.edamam.com/search';
+    const accessConfig = `&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`;
+    const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
+
+    return this.http.get(edamamReqUrl);
+  }
+
   mapToRecipes (data) {
     const service = this;
     const { hits = [] } = data;
-    return hits.map(function(hit, index: number) {
-      const { label, ingredientLines, image, uri, url, shareAs } = hit && hit.recipe;
-      const id = uri || url || shareAs || image;
+    return hits.map(function(hit) {
+      const recipe = hit && hit.recipe;
+      const { label, ingredientLines, image } = recipe;
+      const id = service.getRecipeId(recipe);
       const ingredients = service.textToIngredients(ingredientLines);
       return new Recipe(id, label, ingredients, image);
     });
+  }
+
+  //crud, get-set
+
+  addRecipe(recipe: Recipe){
+    const recipeLib = this.getLocalStorageRecipes();
+    recipeLib[recipe.id] = recipe;
+    this.updateSavedRecipes(recipeLib);
   }
 
   deleteRecipe(recipe:Recipe) {
@@ -189,6 +205,21 @@ private handleError<T> (operation = 'operation', result?: T) {
     this.setSelectedRecipe(recipeArr.pop());
   }
 
+  setSelectedRecipe(recipe: Recipe): void {
+    this.selectedRecipe$.next(recipe);
+  }
+
+  getSelectedRecipe(): Recipe {
+    return this.selectedRecipe$ ? this.selectedRecipe$.getValue() : this.recipes$.getValue().find(r => r);
+  }
+
+  getRecipe(id: string): Observable<Recipe> {
+    const idRecipe = this.getLocalStorageRecipes()[id] || {};
+    const idRecipe$ = new BehaviorSubject<Recipe>(idRecipe);
+    this.cast = idRecipe$.asObservable();
+    return idRecipe$;
+ }
+
   getLocalStorageRecipes(): object {
     return JSON.parse(sessionStorage.getItem('recipes')) || {};
   }
@@ -200,36 +231,6 @@ private handleError<T> (operation = 'operation', result?: T) {
       localRecipe.ingredients = localRecipe.ingredients as Ingredient[];
       return localRecipe as Recipe;
     });
-  }
-
-  addRecipe(recipe: Recipe){
-    const recipeLib = this.getLocalStorageRecipes();
-    recipeLib[recipe.id] = recipe;
-    this.updateSavedRecipes(recipeLib);
-  }
-
-  searchRecipes(searchInput: string) {
-    const edamam = 'https://api.edamam.com/search';
-    const accessConfig = `&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`;
-    const edamamReqUrl = `${edamam}?q=${searchInput}${accessConfig}`;
-
-    return this.http.get(edamamReqUrl);
-  }
-
-  setupLocalDefault() {
-    this.recipes = this.getLocalStorageRecipeArr();
-    this.selectedRecipe = this.recipes.pop();
-  }
-
-  setSelectedRecipe(recipe: Recipe): void {
-    this.selectedRecipe$.next(recipe);
-  }
-
-  getSelectedRecipe(): Recipe {
-    if (!this.selectedRecipe) {
-      this.setupLocalDefault();
-    }
-    return this.selectedRecipe;
   }
 
   constructor(private appConfig: AppConfig,

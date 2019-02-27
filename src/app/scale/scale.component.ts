@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { Scale } from '../types/scale';
 import { Recipe } from '../types/recipe';
 
 import { ConversionService } from '../core/services/conversion.service';
@@ -17,15 +16,11 @@ import { Ingredient } from '../types/ingredient';
 })
 
 export class ScaleComponent implements OnInit {
-@Input() selectedRecipe: Recipe;
+@Input() selectedRecipe$: Observable<Recipe>;
+selectedRecipe: Recipe;
 
  conversions: object;
  conversionsArr: Array<object>;
- recipes: Recipe[];
-
- onSelect(recipe: Recipe): void {
-   this.selectedRecipe = recipe;
- }
 
  getConversions(): void {
   const component = this;
@@ -41,19 +36,20 @@ getIndexFromEvent(e: Event): number {
   return this.recipeService.getIngredientQuantity(idStr);
 }
 
-onQuantityChanged( e: Event) {
+onQuantityChanged( newRecipe: Recipe, e: Event) {
+  const id = newRecipe.id
   const ingredientIndex = this.getIndexFromEvent(e);
   this.conversionService.quantityChanged(this.selectedRecipe, ingredientIndex);
 }
 
-private initQuantityObservers() {
+private initQuantityObservers(newRecipe: Recipe) {
   const quantityInputs = document.querySelectorAll('input.quantity');
   if (!quantityInputs || !quantityInputs.length) {
     return;
   }
   fromEvent(quantityInputs, 'keyup')
   .pipe(debounceTime(500), distinctUntilChanged(),
-    map((e) => this.onQuantityChanged(e)))
+    map((e) => this.onQuantityChanged(newRecipe, e)))
   .subscribe();
 }
 
@@ -67,7 +63,8 @@ onMeasurementChanged(ingredient: Ingredient) {
 
   ngOnInit() {
     this.getConversions();
-    this.initQuantityObservers();
+    //TODO: fix timing of quantity observer init
+    this.selectedRecipe$.subscribe(val => this.initQuantityObservers(val));
     console.log('nutrition info', this.nutritionService.nutriitonInfo);
   }
 }

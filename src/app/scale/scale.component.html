@@ -1,6 +1,6 @@
 <div>
     <h3>scale</h3>
-    <div *ngIf="selectedRecipe">
+    <div *ngIf="selectedRecipe$ | async; let selectedRecipe">
         <h2>{{selectedRecipe.name}} </h2>
         <div>
             <div class ="recipeImage"><img src="{{selectedRecipe.imageUrl}}"></div>

@@ -150,8 +150,7 @@ private handleError<T> (operation = 'operation', result?: T) {
   getRecipeId(dataHit) {
     const { image, uri, url, shareAs } = dataHit;
     const uniqueUrl = uri || url || shareAs || image;
-    const id = /(\w*)$/.exec(uniqueUrl).pop();
-    return id;
+    return /(\w*)$/.exec(uniqueUrl).pop();
   }
 
   //search

@@ -8,19 +8,31 @@ import { Ingredient } from 'src/app/types/ingredient';
 export class ConversionService {
 
   oneHundred =  100;
+  eight = 8;
+  six = 6;
+  two = 2;
+  one = 1;
 
   conversions: object = {
-    drop: { name: 'drop', base: 1, teaspoon: 0.01, tablespoon: 0.0033, cup: 0.0002,
+    cup: { name: 'cup', base: this.one,
+      drop: this.six * this.eight * this.oneHundred, ounce: this.eight, teaspoon: this.six * this.eight, tablespoon: this.two * this.eight,
+      aliases: ['cup', 'cups']
+    },
+    drop: { name: 'drop', base: this.one,
+      ounce: 0.001667, teaspoon: this.one / this.oneHundred, tablespoon: 0.0033, cup: 0.0002,
       aliases: ['drop', 'drops']
     },
-    teaspoon: { name: 'teaspoon', base: 1, drop: this.oneHundred, tablespoon: 0.3333, cup: 0.0208,
+    ounce: { name: 'ounce', base: this.one,
+      cup: 0.125, drop: this.six * this.oneHundred, teaspoon: this.six, tablespoon: this.two,
+      aliases: ['ounce', 'ounces', 'oz']
+    },
+    teaspoon: { name: 'teaspoon', base: 1,
+      drop: this.oneHundred, ounce: 0.1667, tablespoon: 0.3333, cup: 0.0208,
       aliases: ['teaspoon', 'teaspoons', 'tsp', 'tsps']
     },
-    tablespoon: { name: 'tablespoon', base: 1, drop: 3 * this.oneHundred, teaspoon: 3, cup: 0.0625,
+    tablespoon: { name: 'tablespoon', base: 1,
+      drop: 3 * this.oneHundred, ounce: this.one / this.two , teaspoon: 3, cup: 0.0625,
       aliases: ['tablespoon', 'tablespoons', 'tbsp', 'tbsps']
-    },
-    cup: { name: 'cup', base: 1, drop: 4800, teaspoon: 48, tablespoon: 16,
-      aliases: ['cup', 'cups']
     }
   };
 

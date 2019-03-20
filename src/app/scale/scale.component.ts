@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Observable, fromEvent } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { fromEvent } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Recipe } from '../types/recipe';
@@ -16,8 +16,7 @@ import { Ingredient } from '../types/ingredient';
 })
 
 export class ScaleComponent implements OnInit {
-@Input() selectedRecipe$: Observable<Recipe>;
-selectedRecipe: Recipe;
+data;
 
  conversions: object;
  conversionsArr: Array<object>;
@@ -37,9 +36,8 @@ getIndexFromEvent(e: Event): number {
 }
 
 onQuantityChanged( newRecipe: Recipe, e: Event) {
-  const id = newRecipe.id
   const ingredientIndex = this.getIndexFromEvent(e);
-  this.conversionService.quantityChanged(this.selectedRecipe, ingredientIndex);
+  this.conversionService.quantityChanged(this.data.recipe, ingredientIndex);
 }
 
 private initQuantityObservers(newRecipe: Recipe) {
@@ -59,12 +57,12 @@ onMeasurementChanged(ingredient: Ingredient) {
 
   constructor(private conversionService: ConversionService,
               private recipeService: RecipeService,
-              public nutritionService: NutritionService) { }
+              public nutritionService: NutritionService) {}
 
   ngOnInit() {
     this.getConversions();
     //TODO: fix timing of quantity observer init
-    this.selectedRecipe$.subscribe(val => this.initQuantityObservers(val));
+    this.recipeService.selectedRecipe$.subscribe(val => this.initQuantityObservers(val));
     console.log('nutrition info', this.nutritionService.nutriitonInfo);
   }
 }

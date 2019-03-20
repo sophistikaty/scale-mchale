@@ -1,0 +1,14 @@
+<h3>cardbox</h3>
+    <ng-container *ngIf="{recipes: recipeService.recipes$ | async } as data">
+        <ul *ngIf="data.recipes.length">
+            <li *ngFor="let recipe of data.recipes | keyvalue">
+                <div class ="recipeImage"><img src="{{recipe.value.imageUrl}}"></div>
+                <a routerLink="/detail/{{recipe.value.id}}">
+                    <span class="delicious">{{recipe.value.name}}</span>  
+                </a>
+                <button (click)="selectRecipe(recipe.value)">select</button>
+                <button (click)="deleteRecipe(recipe.value)">delete</button>
+            </li>
+        </ul>
+        <p *ngIf="!data.recipes.length">Nothing to see here. Search for deliciousness to add to your stash.☝🏼</p> 
+    </ng-container>

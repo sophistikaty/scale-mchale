@@ -1,11 +1,11 @@
-<div>
+<div *ngIf="{recipe: recipeService.selectedRecipe$ | async} as data">
     <h3>scale</h3>
-    <div *ngIf="selectedRecipe$ | async; let selectedRecipe">
-        <h2>{{selectedRecipe.name}} </h2>
+    <div *ngIf="data.recipe">
+        <h2>{{data.recipe.name}} </h2>
         <div>
-            <div class ="recipeImage"><img src="{{selectedRecipe.imageUrl}}"></div>
+            <div class ="recipeImage"><img src="{{data.recipe.imageUrl}}"></div>
             <ul class ="recipeDisplay">
-                <li *ngFor="let ingredient of selectedRecipe.ingredients; index as i;">
+                <li *ngFor="let ingredient of data.recipe.ingredients; index as i;">
                     <span>{{ingredient.food | titlecase}}</span>
                     <input class="quantity" id="quantity-{{i}}" [(ngModel)]="ingredient.quantity"/>
                     <select [(ngModel)]="ingredient.measure" (change)="onMeasurementChanged(ingredient)">
@@ -19,5 +19,5 @@
             </ul>
         </div>
     </div>
-    <p *ngIf="!selectedRecipe">☝🏼</p>   
+    <p *ngIf="!data.recipe">☝🏼</p>   
 </div>

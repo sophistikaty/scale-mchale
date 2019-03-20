@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-// import { catchError, tap } from 'rxjs/operators';
 
 import { Recipe } from '../../types/recipe';
 import { NutritionService } from './nutrition.service';
@@ -63,7 +62,7 @@ private handleError<T> (operation = 'operation', result?: T) {
   //   );
   }
 
- //ingestion / parsing
+ // ingestion / parsing
 
   getIngredientQuantity (text: string): number {
     return this.conversionService.toNumber(text);

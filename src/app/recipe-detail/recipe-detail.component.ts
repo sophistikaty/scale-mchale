@@ -22,17 +22,13 @@ export class RecipeDetailComponent implements OnInit {
     this.recipeService.updateRecipe(recipe);
   }
 
-  init(): void {
-    const id: string = this.route.snapshot.paramMap.get('id');
-    this.recipe$ = this.recipeService.getRecipe(id);
-  }
-
   constructor(private route: ActivatedRoute,
     private recipeService: RecipeService,
     private location: Location) { }
 
   ngOnInit() {
-    this.init();
+    const id: string = this.route.snapshot.paramMap.get('id');
+    this.recipe$ = this.recipeService.getRecipe(id);
   }
 
 }

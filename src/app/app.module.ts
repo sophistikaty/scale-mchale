@@ -14,6 +14,9 @@ import { CardboxComponent } from './cardbox/cardbox.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { HomeComponent } from './home/home.component';
 import { RecipeSearchComponent } from './recipe-search/recipe-search.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './store';
+import { CardboxModule } from './cardbox/cardbox.module';
 
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
@@ -32,7 +35,8 @@ export function initializeApp(appConfig: AppConfig) {
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({}), CardboxModule
   ],
   providers: [
     AppConfig,

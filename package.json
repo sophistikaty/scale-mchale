@@ -22,15 +22,17 @@
     "@ngrx/store": "^7.3.0",
     "angular-in-memory-web-api": "^0.8.0",
     "core-js": "^2.5.4",
+    "elasticsearch-browser": "^15.1.1",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.12.0",
+    "@angular-devkit/build-angular": "^0.13.7",
     "@angular/cli": "~7.2.2",
     "@angular/compiler-cli": "^7.2.10",
     "@angular/language-service": "~7.2.0",
+    "@types/elasticsearch": "^5.0.32",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",

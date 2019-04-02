@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import * as elasticsearch from 'elasticsearch-browser';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 
 import { Recipe } from '../../types/recipe';
@@ -21,9 +22,18 @@ export class RecipeService {
   private apiKeys = this.appConfig.config.apiKeys;
   private recipesUrl = 'api/recipe';
 
+  private client: elasticsearch.Client;
+
   recipes$;
   selectedRecipe$;
   cast;
+
+  private connect() {
+    this.client = new elasticsearch.Client({
+      host: 'localhost:9200',
+      log: 'trace'
+    });
+  }
 
   /**
  * Handle Http operation that failed.
@@ -119,7 +129,7 @@ private handleError<T> (operation = 'operation', result?: T) {
       });
     });
 
-    if(existingMeasurement){
+    if (existingMeasurement) {
       measurement = existingMeasurement;
     } else {
       measurement = ingredientText.indexOf('of') ? this.textQuantity(ingredientText) : this.addIngredientMeasurement(ingredientText);
@@ -240,5 +250,11 @@ private handleError<T> (operation = 'operation', result?: T) {
 
       this.selectedRecipe$ = new BehaviorSubject<Recipe>(this.getSelectedRecipe());
       this.cast = this.selectedRecipe$.asObservable();
+
+      this.connect();
+      this.client.ping({
+        requestTimeout: Infinity,
+        body: 'hello JavaSampleApproach!'
+      });
     }
 }
